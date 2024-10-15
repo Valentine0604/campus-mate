@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+
 
 @Entity
 @Table(name = "grade")
@@ -18,7 +18,7 @@ public class Grade {
     @Id
     @Column(name = "grade_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int gradeId;
+    private Long gradeId;
 
     @NonNull
     @Column(name = "subject_name", length = 100)
