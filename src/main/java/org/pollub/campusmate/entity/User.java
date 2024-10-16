@@ -1,6 +1,7 @@
 package org.pollub.campusmate.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.pollub.campusmate.Role;
@@ -11,12 +12,18 @@ import org.pollub.campusmate.Role;
 @Setter
 @NoArgsConstructor
 @RequiredArgsConstructor
-public class User {
+public class User{
 
     @Id
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
+
+    @NonNull
+    @Column(name = "email")
+    @Email
+    @Size(message = "Email must be a valid email address", max = 100)
+    private String email;
 
     @NonNull
     @Column(name = "first_name", length = 50)
