@@ -36,7 +36,7 @@ public class AddressBookEntry {
     private String phoneNumber;
 
     @NonNull
-    @Column(name = "class_number")
+    @Column(name = "class_number", length = 5)
     private String classNumber;
 
     @Column(name = "notes", length = 200)

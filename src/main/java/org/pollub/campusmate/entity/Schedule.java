@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.pollub.campusmate.Role;
 
 import java.time.LocalDateTime;
 

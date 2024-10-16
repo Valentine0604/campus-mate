@@ -19,17 +19,17 @@ public class User {
     private Long userId;
 
     @NonNull
-    @Column(name = "first_name")
+    @Column(name = "first_name", length = 50)
     private String firstName;
 
     @NonNull
-    @Column(name = "last_name")
+    @Column(name = "last_name", length = 50)
     private String lastName;
 
     //TODO: password validation
 
     @NonNull
-    @Column(name = "password")
+    @Column(name = "password", length = 12)
     @Size(message = "Password must contain between 6 and 12 characters", min = 6, max = 12)
     private String password;
 
