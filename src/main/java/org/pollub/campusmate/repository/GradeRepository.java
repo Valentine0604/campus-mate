@@ -7,9 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GradeRepository extends CrudRepository<Grade, Long> {
 
-    Grade findByGradeId(Long gradeId);
-
     boolean existsByGradeId(Long gradeId);
-
-    void deleteByGradeId(Long gradeId);
 }

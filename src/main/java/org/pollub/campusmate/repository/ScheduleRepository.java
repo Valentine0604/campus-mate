@@ -7,8 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ScheduleRepository extends CrudRepository<Schedule, Long> {
 
-    Schedule findByScheduleId(Long scheduleId);
-
     Schedule findBySubjectName(String subjectName);
 
     boolean existsByScheduleId(Long scheduleId);

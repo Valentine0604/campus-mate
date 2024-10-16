@@ -9,11 +9,7 @@ public interface AddressBookRepository extends CrudRepository<AddressBook, Long>
 
     AddressBook findByBookName(String bookName);
 
-    AddressBook findByBookId(Long bookId);
-
     AddressBook findByBookIdAndBookName(Long bookId, String bookName);
-
-    void deleteByBookId(Long bookId);
 
     void deleteByBookIdAndBookName(Long bookId, String bookName);
 

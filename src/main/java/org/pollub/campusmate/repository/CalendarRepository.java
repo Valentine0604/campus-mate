@@ -15,7 +15,5 @@ public interface CalendarRepository extends CrudRepository<Calendar, Long> {
 
     boolean existsByCalendarName(String calendarName);
 
-    void deleteByCalendarId(Long calendarId);
-
     void deleteByCalendarName(String calendarName);
 }
