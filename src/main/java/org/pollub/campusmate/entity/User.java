@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.pollub.campusmate.Role;
 
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 @Getter
@@ -44,4 +46,29 @@ public class User{
     @Enumerated(EnumType.STRING)
     @Column(name = "role_name")
     private Role role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Grade> grades;
+
+    @NonNull
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Schedule schedule;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Post> posts;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Team> teams;
+
+    @NonNull
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Calendar calendar;
+
+    @NonNull
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private AddressBook addressBook;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private AddressBookEntry addressBookEntry;
+
 }

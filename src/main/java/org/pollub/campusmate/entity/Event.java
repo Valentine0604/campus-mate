@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "address_book")
@@ -41,4 +42,15 @@ public class Event {
     @Column(name = "end_date")
     @FutureOrPresent
     private LocalDateTime endDate;
+
+    @ManyToMany
+    @JoinTable(name = "event_team",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "team_id"))
+    private List<Team> teams;
+
+    @NonNull
+    @ManyToOne
+    @JoinColumn(name = "calendar_id", referencedColumnName = "calendar_id")
+    private Calendar calendar;
 }
