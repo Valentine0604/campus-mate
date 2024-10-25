@@ -25,5 +25,4 @@ public class Team {
     @Column(name = "description", length = 200)
     @Size(message = "Description cannot be longer than 200 characters", max = 200)
     private String description;
-
 }
