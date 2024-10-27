@@ -6,8 +6,6 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.pollub.campusmate.Role;
 
-import java.util.List;
-
 @Entity
 @Table(name = "users")
 @Getter
