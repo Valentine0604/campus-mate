@@ -43,4 +43,13 @@ public class AddressBookEntry {
     @Size(message = "Notes cannot be longer than 200 characters", max = 200)
     private String notes;
 
+    @NonNull
+    @ManyToOne
+    @JoinColumn(name = "address_book_id", referencedColumnName = "address_book_id")
+    private AddressBook addressBook;
+
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    private User user;
+
 }

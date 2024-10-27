@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "post")
@@ -45,4 +46,13 @@ public class Post {
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
+
+    @NonNull
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @NonNull
+    @OneToMany(mappedBy = "post")
+    private List<Team> teams;
 }

@@ -40,8 +40,15 @@ public class Grade {
     @Column(name = "date_of_receipt", updatable = false)
     private LocalDate dateOfReceipt;
 
+    @NonNull
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    private User user;
+
     @PrePersist
     protected void onCreate() {
         this.dateOfReceipt = LocalDate.now();
     }
+
+
 }

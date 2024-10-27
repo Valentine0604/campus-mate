@@ -46,4 +46,9 @@ public class Schedule {
     @Column(name = "location", length = 50)
     @Size(message = "Location cannot be longer than 50 characters", max = 50)
     private String location;
+
+    @NonNull
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    private User user;
 }
