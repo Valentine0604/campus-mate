@@ -2,6 +2,7 @@ package org.pollub.campusmate.service;
 
 import lombok.AllArgsConstructor;
 import org.pollub.campusmate.entity.Schedule;
+import org.pollub.campusmate.exception.ScheduleNotFound;
 import org.pollub.campusmate.repository.ScheduleRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,9 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
 
     public Schedule getSchedule(long scheduleId) {
-        return scheduleRepository.findById(scheduleId).orElse(null);
+
+        return scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new ScheduleNotFound("Schedule with id " + scheduleId + " not found"));
     }
 
     public void addSchedule(Schedule schedule) {
@@ -23,9 +26,9 @@ public class ScheduleService {
     }
 
     public void deleteSchedule(long scheduleId) {
-//        if(!scheduleRepository.existsById(scheduleId)) {
-//
-//        }
+        if(!scheduleRepository.existsById(scheduleId)) {
+            throw new ScheduleNotFound("Cannot execute delete operation. Schedule with id " + scheduleId + " not found");
+        }
         scheduleRepository.deleteById(scheduleId);
     }
 
@@ -36,7 +39,7 @@ public class ScheduleService {
         schedules.forEach(foundSchedules::add);
 
         if(foundSchedules.isEmpty()){
-            return null;
+            throw new ScheduleNotFound("No schedules found");
         }
 
         return foundSchedules;

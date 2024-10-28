@@ -2,6 +2,7 @@ package org.pollub.campusmate.service;
 
 import lombok.AllArgsConstructor;
 import org.pollub.campusmate.entity.Post;
+import org.pollub.campusmate.exception.PostNotFound;
 import org.pollub.campusmate.repository.PostRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,9 @@ public class PostService {
     private final PostRepository postRepository;
 
     public Post getPost(long postId){
-        return postRepository.findById(postId).orElseThrow(null);
+
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new PostNotFound("Post with id " + postId + " not found"));
     }
 
     public Post addPost(Post post){
@@ -26,9 +29,9 @@ public class PostService {
 
     public void deletePost(long postId){
 
-//        if(!postRepository.existsById(postId)){
-//
-//        }
+        if(!postRepository.existsById(postId)){
+            throw new PostNotFound("Cannot execute delete operation. Post with id " + postId + " not found");
+        }
         postRepository.deleteById(postId);
     }
 
@@ -39,7 +42,7 @@ public class PostService {
         posts.forEach(foundPosts::add);
 
         if(foundPosts.isEmpty()){
-            return null;
+            throw new PostNotFound("No posts found");
         }
 
         return foundPosts;

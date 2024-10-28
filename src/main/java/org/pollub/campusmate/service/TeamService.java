@@ -2,6 +2,7 @@ package org.pollub.campusmate.service;
 
 import lombok.AllArgsConstructor;
 import org.pollub.campusmate.entity.Team;
+import org.pollub.campusmate.exception.TeamNotFound;
 import org.pollub.campusmate.repository.TeamRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,9 @@ public class TeamService {
     private final TeamRepository teamRepository;
 
     public Team getTeam(long teamId){
-        return teamRepository.findById(teamId).orElseThrow(null);
+
+        return teamRepository.findById(teamId)
+                .orElseThrow(() -> new TeamNotFound("Team with id " + teamId + " not found"));
     }
 
     public void addTeam(Team team){
@@ -26,9 +29,9 @@ public class TeamService {
 
     public void deleteTeam(long teamId){
 
-//        if(!teamRepository.existsById(teamId)){
-//
-//        }
+        if(!teamRepository.existsById(teamId)){
+            throw new TeamNotFound("Cannot execute delete operation. Team with id " + teamId + " not found");
+        }
 
         teamRepository.deleteById(teamId);
     }
@@ -42,7 +45,7 @@ public class TeamService {
         teams.forEach(foundTeams::add);
 
         if(foundTeams.isEmpty()){
-            return null;
+            throw new TeamNotFound("No teams found");
         }
 
         return foundTeams;

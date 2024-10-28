@@ -2,6 +2,7 @@ package org.pollub.campusmate.service;
 
 import lombok.AllArgsConstructor;
 import org.pollub.campusmate.entity.AddressBook;
+import org.pollub.campusmate.exception.AddressBookNotFound;
 import org.pollub.campusmate.repository.AddressBookRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,8 @@ public class AddressBookService {
     private final AddressBookRepository addressBookRepository;
 
     public AddressBook getAddressBookRepository(long addressBookId) {
-        return addressBookRepository.findById(addressBookId).orElseThrow(null);
+        return addressBookRepository.findById(addressBookId)
+                .orElseThrow(() -> new AddressBookNotFound("Address book with id " + addressBookId + " not found"));
     }
 
     public void createAddressBook(AddressBook addressBook) {
@@ -25,9 +27,9 @@ public class AddressBookService {
     }
 
     public void deleteAddressBook(long addressBookId) {
-//        if(!addressBookRepository.existsById(addressBookId)) {
-//
-//        }
+        if(!addressBookRepository.existsById(addressBookId)) {
+            throw new AddressBookNotFound("Cannot execute delete operation. Address book with id " + addressBookId + " not found");
+        }
         addressBookRepository.deleteById(addressBookId);
     }
 
@@ -38,7 +40,7 @@ public class AddressBookService {
         addressBooks.forEach(foundAddressBooks::add);
 
         if(foundAddressBooks.isEmpty()){
-            return null;
+            throw new AddressBookNotFound("No address books found");
         }
 
         return foundAddressBooks;

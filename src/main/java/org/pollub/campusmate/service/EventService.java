@@ -2,6 +2,7 @@ package org.pollub.campusmate.service;
 
 import lombok.AllArgsConstructor;
 import org.pollub.campusmate.entity.Event;
+import org.pollub.campusmate.exception.EventNotFound;
 import org.pollub.campusmate.repository.EventRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,9 @@ public class EventService {
     private final EventRepository eventRepository;
 
     public Event getEvent(long eventId) {
-        return eventRepository.findById(eventId).orElseThrow(null);
+
+        return eventRepository.findById(eventId)
+                .orElseThrow(() -> new EventNotFound("Event with id " + eventId + " not found"));
     }
 
     public Event addEvent(Event event) {
@@ -25,9 +28,9 @@ public class EventService {
     }
 
     public void deleteEvent(long eventId) {
-//        if(!eventRepository.existsById(eventId)) {
-//
-//        }
+        if(!eventRepository.existsById(eventId)) {
+            throw new EventNotFound("Cannot execute delete operation. Event with id " + eventId + " not found");
+        }
         eventRepository.deleteById(eventId);
     }
 
@@ -40,7 +43,7 @@ public class EventService {
         events.forEach(foundEvents::add);
 
         if(foundEvents.isEmpty()){
-            return null;
+            throw new EventNotFound("No events found");
         }
 
         return foundEvents;
