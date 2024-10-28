@@ -36,10 +36,7 @@ public class PostService {
     }
 
     public List<Post> getAllPosts(){
-        Iterable<Post> posts = postRepository.findAll();
-        List<Post> foundPosts = new ArrayList<>();
-
-        posts.forEach(foundPosts::add);
+        List<Post> foundPosts = (List<Post>)postRepository.findAll();
 
         if(foundPosts.isEmpty()){
             throw new PostNotFound("No posts found");

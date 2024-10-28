@@ -34,10 +34,7 @@ public class AddressBookService {
     }
 
     public List<AddressBook> getAllAddressBooks() {
-        Iterable<AddressBook> addressBooks = addressBookRepository.findAll();
-        List<AddressBook> foundAddressBooks = new ArrayList<>();
-
-        addressBooks.forEach(foundAddressBooks::add);
+        List<AddressBook> foundAddressBooks = (List<AddressBook>)addressBookRepository.findAll();
 
         if(foundAddressBooks.isEmpty()){
             throw new AddressBookNotFound("No address books found");

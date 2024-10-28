@@ -34,10 +34,7 @@ public class GradeService {
     }
 
     public List<Grade> getAllGrades() {
-        Iterable<Grade> grades = gradeRepository.findAll();
-        List<Grade> foundGrades = new ArrayList<>();
-
-        grades.forEach(foundGrades::add);
+        List<Grade> foundGrades = (List<Grade>)gradeRepository.findAll();
 
         if(foundGrades.isEmpty()){
             throw new GradeNotFound("Grades not found");
