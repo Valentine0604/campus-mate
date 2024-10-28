@@ -33,10 +33,7 @@ public class CalendarService {
     }
 
     public List<Calendar> getAllCalendars(){
-        Iterable<Calendar> calendars = calendarRepository.findAll();
-        List<Calendar> foundCalendars = new ArrayList<>();
-
-        calendars.forEach(foundCalendars::add);
+        List<Calendar> foundCalendars = (List<Calendar>)calendarRepository.findAll();
 
         if(foundCalendars.isEmpty()){
             throw new CalendarNotFound("No calendars found");

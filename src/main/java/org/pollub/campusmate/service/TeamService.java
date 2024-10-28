@@ -6,7 +6,6 @@ import org.pollub.campusmate.exception.TeamNotFound;
 import org.pollub.campusmate.repository.TeamRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -39,15 +38,10 @@ public class TeamService {
     //TODO: update team method
 
     public List<Team> getAllTeams(){
-        Iterable<Team> teams = teamRepository.findAll();
-        List<Team> foundTeams = new ArrayList<>();
-
-        teams.forEach(foundTeams::add);
-
-        if(foundTeams.isEmpty()){
-            throw new TeamNotFound("No teams found");
+        List<Team> foundTeams = (List<Team>) teamRepository.findAll();
+        if (foundTeams.isEmpty()) {
+            throw new TeamNotFound("Teams not found");
         }
-
         return foundTeams;
     }
 

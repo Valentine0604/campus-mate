@@ -37,15 +37,10 @@ public class UserService {
     //TODO: List<User> foundUsers = (List<User>) userRepository.findAll();
 
     public List<User> getAllUsers(){
-        Iterable<User> users = userRepository.findAll();
-        List<User> foundUsers = new ArrayList<>();
-
-        users.forEach(foundUsers::add);
-
-        if(foundUsers.isEmpty()){
-            throw new UserNotFound("No users found");
+        List<User> foundUsers = (List<User>) userRepository.findAll();
+        if (foundUsers.isEmpty()) {
+            throw new UserNotFound("Users not found");
         }
-
         return foundUsers;
     }
 

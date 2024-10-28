@@ -37,10 +37,7 @@ public class EventService {
     //TODO: update event method
 
     public List<Event> getAllEvents() {
-        Iterable<Event> events = eventRepository.findAll();
-        List<Event> foundEvents = new ArrayList<>();
-
-        events.forEach(foundEvents::add);
+        List<Event> foundEvents = (List<Event>)eventRepository.findAll();
 
         if(foundEvents.isEmpty()){
             throw new EventNotFound("No events found");

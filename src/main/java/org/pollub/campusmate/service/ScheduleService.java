@@ -6,7 +6,6 @@ import org.pollub.campusmate.exception.ScheduleNotFound;
 import org.pollub.campusmate.repository.ScheduleRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -33,10 +32,7 @@ public class ScheduleService {
     }
 
     public List<Schedule> getAllSchedules() {
-        Iterable<Schedule> schedules = scheduleRepository.findAll();
-        List<Schedule> foundSchedules = new ArrayList<>();
-
-        schedules.forEach(foundSchedules::add);
+        List<Schedule> foundSchedules = (List<Schedule>)scheduleRepository.findAll();
 
         if(foundSchedules.isEmpty()){
             throw new ScheduleNotFound("No schedules found");
