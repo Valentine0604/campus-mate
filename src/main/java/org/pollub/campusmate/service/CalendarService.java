@@ -2,6 +2,7 @@ package org.pollub.campusmate.service;
 
 import lombok.AllArgsConstructor;
 import org.pollub.campusmate.entity.Calendar;
+import org.pollub.campusmate.exception.CalendarNotFound;
 import org.pollub.campusmate.repository.CalendarRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,9 @@ public class CalendarService {
     private final CalendarRepository calendarRepository;
 
     public Calendar getCalendar(long calendarId){
-        return calendarRepository.findById(calendarId).orElseThrow(null);
+
+        return calendarRepository.findById(calendarId)
+                .orElseThrow(() -> new CalendarNotFound("Calendar with id " + calendarId + " not found"));
     }
 
     public Calendar createCalendar(Calendar calendar){
@@ -23,9 +26,9 @@ public class CalendarService {
     }
 
     public void deleteCalendar(long calendarId){
-//        if(!calendarRepository.existsById(calendarId){
-//
-//        }
+        if(!calendarRepository.existsById(calendarId)){
+            throw new CalendarNotFound("Cannot execute delete operation. Calendar with id " + calendarId + " not found");
+        }
         calendarRepository.deleteById(calendarId);
     }
 
@@ -36,7 +39,7 @@ public class CalendarService {
         calendars.forEach(foundCalendars::add);
 
         if(foundCalendars.isEmpty()){
-            return null;
+            throw new CalendarNotFound("No calendars found");
         }
 
         return foundCalendars;
