@@ -5,11 +5,11 @@ import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "address_book")
+@Table(name = "event")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -36,12 +36,12 @@ public class Event {
     @NonNull
     @Column(name = "start_date")
     @FutureOrPresent
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
     @NonNull
     @Column(name = "end_date")
     @FutureOrPresent
-    private LocalDateTime endDate;
+    private LocalDate endDate;
 
     @ManyToMany
     @JoinTable(name = "event_team",

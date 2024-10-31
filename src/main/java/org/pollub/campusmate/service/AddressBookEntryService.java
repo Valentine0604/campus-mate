@@ -22,8 +22,8 @@ public class AddressBookEntryService {
                 .orElseThrow(() -> new AddressBookEntryNotFound("Entry with id " + addressBookEntryId + " not found"));
     }
 
-    public void saveAddressBookEntry(AddressBookEntry addressBookEntry) {
-        addressBookEntryRepository.save(addressBookEntry);
+    public AddressBookEntry saveAddressBookEntry(AddressBookEntry addressBookEntry) {
+        return addressBookEntryRepository.save(addressBookEntry);
     }
 
     public void deleteAddressBookEntry(long addressBookEntryId) {

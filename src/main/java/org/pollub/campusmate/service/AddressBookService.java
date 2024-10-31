@@ -22,8 +22,8 @@ public class AddressBookService {
                 .orElseThrow(() -> new AddressBookNotFound("Address book with id " + addressBookId + " not found"));
     }
 
-    public void createAddressBook(AddressBook addressBook) {
-        addressBookRepository.save(addressBook);
+    public AddressBook createAddressBook(AddressBook addressBook) {
+        return addressBookRepository.save(addressBook);
     }
 
     public void deleteAddressBook(long addressBookId) {

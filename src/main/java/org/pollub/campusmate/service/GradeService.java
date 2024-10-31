@@ -22,8 +22,9 @@ public class GradeService {
                 .orElseThrow(() -> new GradeNotFound("Grade with id " + gradeId + " not found"));
     }
 
-    public void addGrade(Grade grade) {
-        gradeRepository.save(grade);
+    public Grade addGrade(Grade grade) {
+
+        return gradeRepository.save(grade);
     }
 
     public void deleteGrade(long gradeId) {
