@@ -4,10 +4,12 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.pollub.campusmate.validator.ValidDate;
 
 import java.time.LocalDate;
 import java.util.List;
 
+@ValidDate
 @Entity
 @Table(name = "event")
 @Getter
@@ -30,8 +32,6 @@ public class Event {
     @Column(name = "event_description", length = 200)
     @Size(message = "Description cannot be longer than 100 characters", max = 200)
     private String eventDescription;
-
-    //TODO: date validation
 
     @NonNull
     @Column(name = "start_date")

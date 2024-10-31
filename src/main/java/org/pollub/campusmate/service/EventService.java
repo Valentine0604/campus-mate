@@ -13,8 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 public class EventService {
 
-    //TODO: exception handling
-
     private final EventRepository eventRepository;
 
     public Event getEvent(long eventId) {

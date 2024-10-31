@@ -34,8 +34,6 @@ public class UserService {
 
     //TODO: update user method @Transactional
 
-    //TODO: List<User> foundUsers = (List<User>) userRepository.findAll();
-
     public List<User> getAllUsers(){
         List<User> foundUsers = (List<User>) userRepository.findAll();
         if (foundUsers.isEmpty()) {

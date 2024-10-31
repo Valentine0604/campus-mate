@@ -1,10 +1,12 @@
 package org.pollub.campusmate.web;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.pollub.campusmate.entity.Event;
 import org.pollub.campusmate.service.EventService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,9 +24,16 @@ public class EventController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Event> createEvent(@RequestBody Event event) {
-        return new ResponseEntity<>(eventService.addEvent(event), HttpStatus.CREATED);
+    public ResponseEntity<String> createEvent(@Valid @RequestBody Event event, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            StringBuilder errorMessage = new StringBuilder();
+            bindingResult.getAllErrors().forEach(error -> errorMessage.append(error.getDefaultMessage()).append("\n"));
+            return new ResponseEntity<>(errorMessage.toString(), HttpStatus.BAD_REQUEST);
+        }
+        eventService.addEvent(event);
+        return ResponseEntity.ok("Event created successfully");
     }
+
 
     @DeleteMapping("/delete/{eventId}")
     public ResponseEntity<HttpStatus> deleteEvent(@PathVariable Long eventId) {

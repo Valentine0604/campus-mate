@@ -5,15 +5,11 @@ import org.pollub.campusmate.entity.Post;
 import org.pollub.campusmate.exception.PostNotFound;
 import org.pollub.campusmate.repository.PostRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class PostService {
-
-    //TODO: exception handling
 
     private final PostRepository postRepository;
 

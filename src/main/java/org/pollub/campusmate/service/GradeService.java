@@ -23,7 +23,6 @@ public class GradeService {
     }
 
     public Grade addGrade(Grade grade) {
-
         return gradeRepository.save(grade);
     }
 
