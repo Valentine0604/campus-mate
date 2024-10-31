@@ -12,8 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 public class TeamService {
 
-    //TODO: exception handling
-
     private final TeamRepository teamRepository;
 
     public Team getTeam(long teamId){

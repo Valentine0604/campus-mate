@@ -1,10 +1,12 @@
 package org.pollub.campusmate.web;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.pollub.campusmate.entity.Grade;
 import org.pollub.campusmate.service.GradeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,8 +24,15 @@ public class GradeController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Grade> createGrade(@RequestBody Grade grade) {
-        return new ResponseEntity<>(gradeService.addGrade(grade), HttpStatus.CREATED);
+    public ResponseEntity<String> createGrade(@Valid @RequestBody Grade grade, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            StringBuilder errorMessage = new StringBuilder();
+            bindingResult.getAllErrors().forEach(error -> errorMessage.append(error.getDefaultMessage()).append("\n"));
+            return new ResponseEntity<>(errorMessage.toString(), HttpStatus.BAD_REQUEST);
+        }
+
+        gradeService.addGrade(grade);
+        return ResponseEntity.ok("Grade created successfully");
     }
 
     @DeleteMapping("/delete/{gradeId}")

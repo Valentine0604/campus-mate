@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.pollub.campusmate.Role;
+import org.pollub.campusmate.validator.ValidPassword;
 
 import java.util.List;
 
@@ -35,8 +36,7 @@ public class User{
     @Column(name = "last_name", length = 50)
     private String lastName;
 
-    //TODO: password validation
-
+    @ValidPassword
     @NonNull
     @Column(name = "password", length = 12)
     @Size(message = "Password must contain between 6 and 12 characters", min = 6, max = 12)

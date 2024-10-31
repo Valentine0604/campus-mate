@@ -13,8 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 public class AddressBookService {
 
-    //TODO: exception handling
-
     private final AddressBookRepository addressBookRepository;
 
     public AddressBook getAddressBookRepository(long addressBookId) {

@@ -3,6 +3,7 @@ package org.pollub.campusmate.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.pollub.campusmate.validator.ValidGrade;
 
 import java.time.LocalDate;
 
@@ -25,8 +26,7 @@ public class Grade {
     @Size(message = "Subject cannot be longer than 100 characters", max = 100)
     private String subjectName;
 
-    //TODO: grade validator
-
+    @ValidGrade
     @NonNull
     @Column(name = "grade", length = 1)
     @Size(message = "Grade must be a single character", max = 1)
