@@ -22,8 +22,9 @@ public class TeamService {
                 .orElseThrow(() -> new TeamNotFound("Team with id " + teamId + " not found"));
     }
 
-    public void addTeam(Team team){
-        teamRepository.save(team);
+    public Team addTeam(Team team){
+
+        return teamRepository.save(team);
     }
 
     public void deleteTeam(long teamId){
