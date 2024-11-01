@@ -2,7 +2,7 @@ package org.pollub.campusmate.validator;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.pollub.campusmate.constants.Constants;
+import org.pollub.campusmate.constants.Pattern;
 
 public class PasswordValidator implements ConstraintValidator<ValidPassword, String> {
 
@@ -10,6 +10,6 @@ public class PasswordValidator implements ConstraintValidator<ValidPassword, Str
 
     @Override
     public boolean isValid(String password, ConstraintValidatorContext context) {
-        return Constants.PASSWORD_PATTERN.matcher(password).matches();
+        return Pattern.PASSWORD_PATTERN.matcher(password).matches();
     }
 }
