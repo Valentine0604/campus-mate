@@ -21,15 +21,16 @@ public class AddressBookEntryController {
         return new ResponseEntity<>(addressBookEntryService.getAddressBookEntry(addressBookEntryId), HttpStatus.OK);
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<AddressBookEntry> createAddressBookEntry(@RequestBody AddressBookEntry addressBookEntry) {
-        return new ResponseEntity<>(addressBookEntryService.saveAddressBookEntry(addressBookEntry), HttpStatus.CREATED);
+    @PostMapping
+    public ResponseEntity<String> createAddressBookEntry(@RequestBody AddressBookEntry addressBookEntry) {
+        addressBookEntryService.saveAddressBookEntry(addressBookEntry);
+        return new ResponseEntity<>("Entry created successfully",HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/delete/{addressBookEntryId}")
-    public ResponseEntity<HttpStatus> deleteAddressBookEntry(@PathVariable long addressBookEntryId) {
+    @DeleteMapping("/{addressBookEntryId}")
+    public ResponseEntity<String> deleteAddressBookEntry(@PathVariable long addressBookEntryId) {
         addressBookEntryService.deleteAddressBookEntry(addressBookEntryId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>("Entry deleted successfully",HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/all")

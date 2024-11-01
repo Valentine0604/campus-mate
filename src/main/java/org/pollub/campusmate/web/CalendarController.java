@@ -21,15 +21,16 @@ public class CalendarController {
         return new ResponseEntity<>(calendarService.getCalendar(calendarId), HttpStatus.OK);
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<Calendar> createCalendar(@RequestBody Calendar calendar) {
-        return new ResponseEntity<>(calendarService.createCalendar(calendar), HttpStatus.CREATED);
+    @PostMapping
+    public ResponseEntity<String> createCalendar(@RequestBody Calendar calendar) {
+        calendarService.createCalendar(calendar);
+        return new ResponseEntity<>("Calendar created successfully",HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/delete/{calendarId}")
-    public ResponseEntity<HttpStatus> deleteCalendar(@PathVariable Long calendarId) {
+    @DeleteMapping("/{calendarId}")
+    public ResponseEntity<String> deleteCalendar(@PathVariable Long calendarId) {
         calendarService.deleteCalendar(calendarId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("Calendar deleted successfully",HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/all")

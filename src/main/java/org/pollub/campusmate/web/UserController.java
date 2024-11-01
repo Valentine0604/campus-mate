@@ -21,15 +21,16 @@ public class UserController {
         return new ResponseEntity<>(userService.getUser(userId), HttpStatus.OK);
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        return new ResponseEntity<>(userService.addUser(user), HttpStatus.CREATED);
+    @PostMapping
+    public ResponseEntity<String> createUser(@RequestBody User user) {
+        userService.addUser(user);
+        return new ResponseEntity<>("User created successfully",HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/delete/{userId}")
-    public ResponseEntity<HttpStatus> deleteUser(@PathVariable Long userId) {
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
         userService.deleteUser(userId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("User deleted successfully",HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/all")

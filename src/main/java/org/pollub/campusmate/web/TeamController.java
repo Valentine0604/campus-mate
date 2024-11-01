@@ -21,15 +21,16 @@ public class TeamController {
         return new ResponseEntity<>(teamService.getTeam(teamId), HttpStatus.OK);
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<Team> createTeam(@RequestBody Team team) {
-        return new ResponseEntity<>(teamService.addTeam(team), HttpStatus.CREATED);
+    @PostMapping
+    public ResponseEntity<String> createTeam(@RequestBody Team team) {
+        teamService.addTeam(team);
+        return new ResponseEntity<>("Team created successfully", HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/delete/{teamId}")
-    public ResponseEntity<HttpStatus> deleteTeam(@PathVariable Long teamId) {
+    @DeleteMapping("/{teamId}")
+    public ResponseEntity<String> deleteTeam(@PathVariable Long teamId) {
         teamService.deleteTeam(teamId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("Team deleted successfully",HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/all")

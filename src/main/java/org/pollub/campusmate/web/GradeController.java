@@ -32,13 +32,13 @@ public class GradeController {
         }
 
         gradeService.addGrade(grade);
-        return ResponseEntity.ok("Grade created successfully");
+        return new ResponseEntity<>("Grade added successfully",HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/delete/{gradeId}")
-    public ResponseEntity<HttpStatus> deleteGrade(@PathVariable Long gradeId) {
+    @DeleteMapping("/{gradeId}")
+    public ResponseEntity<String> deleteGrade(@PathVariable Long gradeId) {
         gradeService.deleteGrade(gradeId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("Grade deleted successfully",HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/all")
