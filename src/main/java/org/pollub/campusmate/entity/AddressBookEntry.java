@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.pollub.campusmate.validator.ValidPhoneNumber;
 
 @Entity
 @Table(name = "address_book_entry")
@@ -28,8 +29,7 @@ public class AddressBookEntry {
     @Email
     private String email;
 
-    //TODO: phone number validation
-
+    @ValidPhoneNumber
     @NonNull
     @Column(name = "phone_number", length = 9)
     @Size(message = "Phone number cannot be longer than 9 characters", max = 9)

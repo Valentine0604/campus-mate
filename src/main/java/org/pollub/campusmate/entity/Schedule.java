@@ -27,8 +27,6 @@ public class Schedule {
     @Size(message = "Name cannot be longer than 100 characters", max = 100)
     private String subjectName;
 
-    //TODO: date validation
-
     @NonNull
     @Column(name = "start_date")
     @FutureOrPresent(message = "Date cannot be in the past")
