@@ -14,22 +14,23 @@ import java.util.List;
 @RequestMapping("/api/addressbook")
 public class AddressBookController {
 
-    AddressBookService addressBookService;
+    private final AddressBookService addressBookService;
 
     @GetMapping("/{addressBookId}")
     public ResponseEntity<AddressBook> getAddressBook(@PathVariable Long addressBookId) {
         return new ResponseEntity<>(addressBookService.getAddressBookRepository(addressBookId), HttpStatus.OK);
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<AddressBook> createAddressBook(@RequestBody AddressBook addressBook) {
-        return new ResponseEntity<>(addressBookService.createAddressBook(addressBook), HttpStatus.CREATED);
+    @PostMapping
+    public ResponseEntity<String> createAddressBook(@RequestBody AddressBook addressBook) {
+        addressBookService.createAddressBook(addressBook);
+        return new ResponseEntity<>("AddressBook added successfully", HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/delete/{addressBookId}")
-    public ResponseEntity<HttpStatus> deleteAddressBook(@PathVariable Long addressBookId) {
+    @DeleteMapping("/{addressBookId}")
+    public ResponseEntity<String> deleteAddressBook(@PathVariable Long addressBookId) {
         addressBookService.deleteAddressBook(addressBookId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("AddressBook deleted successfully", HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/all")

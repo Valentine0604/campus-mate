@@ -23,7 +23,7 @@ public class EventController {
         return new ResponseEntity<>(eventService.getEvent(eventId), HttpStatus.OK);
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<String> createEvent(@Valid @RequestBody Event event, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             StringBuilder errorMessage = new StringBuilder();
@@ -31,14 +31,14 @@ public class EventController {
             return new ResponseEntity<>(errorMessage.toString(), HttpStatus.BAD_REQUEST);
         }
         eventService.addEvent(event);
-        return ResponseEntity.ok("Event created successfully");
+        return new ResponseEntity<>("Event created successfully", HttpStatus.CREATED);
     }
 
 
-    @DeleteMapping("/delete/{eventId}")
-    public ResponseEntity<HttpStatus> deleteEvent(@PathVariable Long eventId) {
+    @DeleteMapping("/{eventId}")
+    public ResponseEntity<String> deleteEvent(@PathVariable Long eventId) {
         eventService.deleteEvent(eventId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("Event deleted successfully", HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/all")

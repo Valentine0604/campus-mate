@@ -21,15 +21,16 @@ public class PostController {
         return new ResponseEntity<>(postService.getPost(postId), HttpStatus.OK);
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<Post> createPost(@RequestBody Post post) {
-        return new ResponseEntity<>(postService.addPost(post), HttpStatus.CREATED);
+    @PostMapping
+    public ResponseEntity<String> createPost(@RequestBody Post post) {
+        postService.addPost(post);
+        return new ResponseEntity<>("Post created successfully", HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/delete/{postId}")
-    public ResponseEntity<HttpStatus> deletePost(@PathVariable Long postId) {
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<String> deletePost(@PathVariable Long postId) {
         postService.deletePost(postId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("Post deleted successfully",HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/all")
