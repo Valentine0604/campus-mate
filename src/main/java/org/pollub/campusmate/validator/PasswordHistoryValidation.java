@@ -8,11 +8,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Constraint(validatedBy = PasswordValidator.class)
-@Target({ElementType.FIELD, ElementType.PARAMETER})
+@Constraint(validatedBy = PasswordHistoryValidator.class)
+@Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ValidPassword {
-    String message() default "Password must be between 6 and 12 characters and must contain at least one uppercase letter, one lowercase letter, one digit, and one special character";
+public @interface PasswordHistoryValidation {
+    String message() default "New password cannot be the same as the previous one";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

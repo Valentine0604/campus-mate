@@ -12,10 +12,8 @@ import java.util.List;
 @ValidDate
 @Entity
 @Table(name = "event")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class Event {
 
     @Id
@@ -43,14 +41,15 @@ public class Event {
     @FutureOrPresent
     private LocalDate endDate;
 
-    @ManyToMany
-    @JoinTable(name = "event_team",
-            joinColumns = @JoinColumn(name = "event_id"),
-            inverseJoinColumns = @JoinColumn(name = "team_id"))
-    private List<Team> teams;
-
-    @NonNull
     @ManyToOne
-    @JoinColumn(name = "calendar_id", referencedColumnName = "calendar_id")
+    @JoinColumn(name = "team_id", referencedColumnName = "team_id", nullable = false)
+    private Team team;
+
+    @ManyToOne
+    @JoinColumn(name = "calendar_id", referencedColumnName = "calendar_id", nullable = false)
     private Calendar calendar;
+
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
+    private User user;
 }

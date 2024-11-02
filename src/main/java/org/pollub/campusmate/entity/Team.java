@@ -8,10 +8,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "team")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class Team {
 
     @Id
@@ -28,16 +26,15 @@ public class Team {
     @Size(message = "Description cannot be longer than 200 characters", max = 200)
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "post id", referencedColumnName = "post_id")
-    private Post post;
-
-    @NonNull
-    @ManyToOne
-    @JoinColumn(name = "user id", referencedColumnName = "user_id")
-    private User user;
+    @ManyToMany
+    @JoinTable(name = "team_post", joinColumns = @JoinColumn(name = "team_id"), inverseJoinColumns = @JoinColumn(name = "post_id"))
+    private List<Post> posts;
 
     @ManyToMany
-    @JoinTable(name = "team_event", joinColumns = @JoinColumn(name = "team_id"), inverseJoinColumns = @JoinColumn(name = "event_id"))
+    @JoinTable(name = "team_user", joinColumns = @JoinColumn(name = "team_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private List<User> users;
+
+    @OneToMany
+    @JoinColumn(name = "team_id", referencedColumnName = "team_id")
     private List<Event> events;
 }

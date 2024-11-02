@@ -10,10 +10,8 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "grade")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class Grade {
 
     @Id

@@ -10,9 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "post")
-@Getter
-@Setter
-@RequiredArgsConstructor
+@Data
 @NoArgsConstructor
 public class Post {
 
@@ -22,7 +20,8 @@ public class Post {
     private Long postId;
 
     @NonNull
-    @Column(name = "post_title")
+    @Size(message = "Title cannot be longer than 50 characters", max = 50)
+    @Column(name = "post_title", length = 50)
     private String postTitle;
 
     @NonNull
@@ -47,12 +46,12 @@ public class Post {
         this.updatedAt = LocalDateTime.now();
     }
 
-    @NonNull
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @NonNull
-    @OneToMany(mappedBy = "post")
+
+    @ManyToMany
     private List<Team> teams;
 }

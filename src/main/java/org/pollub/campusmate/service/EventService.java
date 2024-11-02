@@ -1,6 +1,8 @@
 package org.pollub.campusmate.service;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.pollub.campusmate.dto.EventDTO;
 import org.pollub.campusmate.entity.Event;
 import org.pollub.campusmate.exception.EventNotFound;
 import org.pollub.campusmate.repository.EventRepository;
@@ -32,7 +34,16 @@ public class EventService {
         eventRepository.deleteById(eventId);
     }
 
-    //TODO: update event method
+    public void updateEvent(Long eventId, @Valid Event event) {
+        if(!eventRepository.existsById(eventId)) {
+            throw new EventNotFound("Cannot execute update operation. Event with id " + eventId + " not found");
+        }
+        Event foundEvent = eventRepository.findById(eventId).get();
+        event.setEventId(foundEvent.getEventId());
+        event.setTeam(foundEvent.getTeam());
+        event.setCalendar(foundEvent.getCalendar());
+        eventRepository.save(event);
+    }
 
     public List<Event> getAllEvents() {
         List<Event> foundEvents = (List<Event>)eventRepository.findAll();
@@ -43,4 +54,6 @@ public class EventService {
 
         return foundEvents;
     }
+
+
 }

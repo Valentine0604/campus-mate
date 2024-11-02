@@ -7,10 +7,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "calendar")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class Calendar {
 
     @Id
@@ -25,9 +23,13 @@ public class Calendar {
     @OneToMany(mappedBy = "calendar", cascade = CascadeType.ALL)
     private List<Event> events;
 
-    @NonNull
     @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private User user;
 
+    public Calendar(@NonNull String calendarName, List<Event> events, User user) {
+        this.calendarName = calendarName;
+        this.events = events;
+        this.user = user;
+    }
 }

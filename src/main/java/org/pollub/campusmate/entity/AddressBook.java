@@ -8,10 +8,9 @@ import java.util.List;
 
 @Entity
 @Table(name = "address_book")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class AddressBook {
 
     @Id
@@ -24,11 +23,10 @@ public class AddressBook {
     @Size(message = "Name cannot be longer than 50 characters", max = 50)
     private String bookName;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
-    private User user;
-
     @OneToMany(mappedBy = "addressBook", cascade = CascadeType.ALL)
     private List<AddressBookEntry> entries;
 
+    public AddressBook(String bookName) {
+        this.bookName = bookName;
+    }
 }
