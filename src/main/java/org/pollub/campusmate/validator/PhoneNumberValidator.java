@@ -8,6 +8,6 @@ public class PhoneNumberValidator implements ConstraintValidator<ValidPhoneNumbe
 
     @Override
     public boolean isValid(String phone, ConstraintValidatorContext context) {
-        return Pattern.PASSWORD_PATTERN.matcher(phone).matches();
+        return Pattern.PHONE_NUMBER_PATTERN.matcher(phone).matches();
     }
 }

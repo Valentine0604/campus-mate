@@ -21,6 +21,10 @@ public class CalendarService {
                 .orElseThrow(() -> new CalendarNotFound("Calendar with id " + calendarId + " not found"));
     }
 
+    public List<Calendar> getCalendarsByUser(Long userId) {
+        return calendarRepository.findByUserUserId(userId);
+    }
+
     public Calendar createCalendar(Calendar calendar){
         return calendarRepository.save(calendar);
     }
@@ -32,6 +36,17 @@ public class CalendarService {
         calendarRepository.deleteById(calendarId);
     }
 
+    public void updateCalendar(Long calendarId, Calendar calendar) {
+        if(!calendarRepository.existsById(calendarId)){
+            throw new CalendarNotFound("Cannot execute update operation. Calendar with id " + calendarId + " not found");
+        }
+        Calendar foundCalendar = calendarRepository.findById(calendarId).get();
+        calendar.setCalendarId(calendarId);
+        calendar.setEvents(new ArrayList<>(foundCalendar.getEvents()));
+        calendar.setUser(foundCalendar.getUser());
+        calendarRepository.save(calendar);
+    }
+
     public List<Calendar> getAllCalendars(){
         List<Calendar> foundCalendars = (List<Calendar>)calendarRepository.findAll();
 
@@ -41,5 +56,7 @@ public class CalendarService {
 
         return foundCalendars;
     }
+
+
 
 }

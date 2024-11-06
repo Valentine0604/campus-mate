@@ -53,4 +53,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleAddressBookEntryNotFound(AddressBookEntryNotFound ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<String> handleEmailAlreadyExists(EmailAlreadyExistsException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(PasswordDontMatch.class)
+    public ResponseEntity<String> handlePasswordDontMatch(PasswordDontMatch ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
 }

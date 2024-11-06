@@ -11,10 +11,8 @@ import java.time.LocalDateTime;
 @ValidDate
 @Entity
 @Table(name = "schedule")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class Schedule {
 
     @Id

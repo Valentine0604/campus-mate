@@ -6,7 +6,6 @@ import org.pollub.campusmate.exception.AddressBookNotFound;
 import org.pollub.campusmate.repository.AddressBookRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -15,13 +14,13 @@ public class AddressBookService {
 
     private final AddressBookRepository addressBookRepository;
 
-    public AddressBook getAddressBookRepository(long addressBookId) {
+    public AddressBook getAddressBookById(long addressBookId) {
         return addressBookRepository.findById(addressBookId)
                 .orElseThrow(() -> new AddressBookNotFound("Address book with id " + addressBookId + " not found"));
     }
 
-    public AddressBook createAddressBook(AddressBook addressBook) {
-        return addressBookRepository.save(addressBook);
+    public void createAddressBook(AddressBook addressBook) {
+        addressBookRepository.save(addressBook);
     }
 
     public void deleteAddressBook(long addressBookId) {
@@ -29,6 +28,16 @@ public class AddressBookService {
             throw new AddressBookNotFound("Cannot execute delete operation. Address book with id " + addressBookId + " not found");
         }
         addressBookRepository.deleteById(addressBookId);
+    }
+
+    public void updateAddressBook(Long addressBookId, AddressBook addressBook) {
+        if(!addressBookRepository.existsById(addressBookId)) {
+            throw new AddressBookNotFound("Cannot execute update operation. Address book with id " + addressBookId + " not found");
+        }
+        AddressBook foundAddressBook = addressBookRepository.findById(addressBookId).get();
+        addressBook.setBookId(addressBookId);
+        addressBook.setEntries(foundAddressBook.getEntries());
+        addressBookRepository.save(addressBook);
     }
 
     public List<AddressBook> getAllAddressBooks() {
@@ -41,5 +50,7 @@ public class AddressBookService {
         return foundAddressBooks;
     }
 
-    //TODO: update address book method
+
+
+
 }

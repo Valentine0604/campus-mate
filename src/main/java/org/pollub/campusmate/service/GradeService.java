@@ -13,13 +13,28 @@ import java.util.List;
 @AllArgsConstructor
 public class GradeService {
 
-    //TODO: exception handling
     private final GradeRepository gradeRepository;
 
     public Grade getGrade(long gradeId) {
 
         return gradeRepository.findById(gradeId)
                 .orElseThrow(() -> new GradeNotFound("Grade with id " + gradeId + " not found"));
+    }
+
+    public List<Grade> getGradesByStudentId(Long studentId) {
+        List<Grade> foundGrades = new ArrayList<>(gradeRepository.findByUserUserId(studentId));
+        if(foundGrades.isEmpty()){
+            throw new GradeNotFound("Grades not found");
+        }
+        return foundGrades;
+    }
+
+    public List<Grade> getGradesBySubjectName(String subjectName) {
+        List<Grade> foundGrades = new ArrayList<>(gradeRepository.findBySubjectName(subjectName));
+        if(foundGrades.isEmpty()){
+            throw new GradeNotFound("Grades not found");
+        }
+        return foundGrades;
     }
 
     public Grade addGrade(Grade grade) {
@@ -33,6 +48,16 @@ public class GradeService {
         gradeRepository.deleteById(gradeId);
     }
 
+    public void updateGrade(Long gradeId, Grade grade) {
+        if(!gradeRepository.existsById(grade.getGradeId())) {
+            throw new GradeNotFound("Cannot execute update operation. Grade with id " + grade.getGradeId() + " not found");
+        }
+        Grade foundGrade = getGrade(grade.getGradeId());
+        foundGrade.setGradeId(grade.getGradeId());
+        foundGrade.setUser(grade.getUser());
+        gradeRepository.save(grade);
+    }
+
     public List<Grade> getAllGrades() {
         List<Grade> foundGrades = (List<Grade>)gradeRepository.findAll();
 
@@ -42,5 +67,7 @@ public class GradeService {
 
         return foundGrades;
     }
-    //TODO: update grade method
+
+
+
 }
