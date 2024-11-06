@@ -130,6 +130,15 @@ public class UserService {
         return foundUsers;
     }
 
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFound("User with email " + email + " not found"));
+    }
+
+    public User getUserByFirstNameAndLastName(String firstName, String lastName) {
+        return userRepository.findByFirstNameAndLastName(firstName, lastName)
+                .orElseThrow(() -> new UserNotFound("User with name " + firstName + " " + lastName + " not found"));
+    }
 
     //TODO: add get password after security
     public List<String> getCurrentPassword() {
