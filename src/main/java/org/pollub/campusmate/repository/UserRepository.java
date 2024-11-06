@@ -16,6 +16,8 @@ import java.util.Optional;
 public interface UserRepository extends CrudRepository<User, Long> {
 
     List<User> findByRole(Role role);
+    Optional<User> findByEmail(String email);
+    Optional<User> findByFirstNameAndLastName(String firstName, String lastName);
 
 
     boolean existsByEmail(@NonNull @Email(message = "Email must be a valid email address") @Size(message = "Email cannot be longer than 100 characters ", max = 100) String email);
