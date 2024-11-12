@@ -1,9 +1,8 @@
 package org.pollub.campusmate;
 
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.pollub.campusmate.entity.AddressBook;
-import org.pollub.campusmate.service.AddressBookService;
+import org.pollub.campusmate.addressbook.entity.AddressBook;
+import org.pollub.campusmate.addressbook.service.AddressBookService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
