@@ -1,4 +1,4 @@
-package org.pollub.campusmate.utilities;
+package org.pollub.campusmate.utilities.security;
 
 public enum Role {
     ADMIN,

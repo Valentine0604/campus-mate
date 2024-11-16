@@ -3,7 +3,7 @@ package org.pollub.campusmate.user.web;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.pollub.campusmate.utilities.Role;
+import org.pollub.campusmate.utilities.security.Role;
 import org.pollub.campusmate.calendar.dto.CalendarDto;
 import org.pollub.campusmate.calendar.entity.Calendar;
 import org.pollub.campusmate.event.dto.EventDto;

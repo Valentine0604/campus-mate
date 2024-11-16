@@ -3,7 +3,7 @@ package org.pollub.campusmate.user.repository;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.NonNull;
-import org.pollub.campusmate.utilities.Role;
+import org.pollub.campusmate.utilities.security.Role;
 import org.pollub.campusmate.user.entity.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

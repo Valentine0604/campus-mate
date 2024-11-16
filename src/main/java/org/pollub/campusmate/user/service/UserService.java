@@ -3,7 +3,7 @@ package org.pollub.campusmate.user.service;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.pollub.campusmate.utilities.Role;
+import org.pollub.campusmate.utilities.security.Role;
 import org.pollub.campusmate.user.dto.ChangePasswordDto;
 import org.pollub.campusmate.event.entity.Event;
 import org.pollub.campusmate.team.entity.Team;

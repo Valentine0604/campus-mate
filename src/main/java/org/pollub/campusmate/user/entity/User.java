@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.pollub.campusmate.utilities.Role;
+import org.pollub.campusmate.utilities.security.Role;
 import org.pollub.campusmate.addressbookentry.entity.AddressBookEntry;
 import org.pollub.campusmate.calendar.entity.Calendar;
 import org.pollub.campusmate.event.entity.Event;
@@ -13,7 +13,11 @@ import org.pollub.campusmate.post.entity.Post;
 import org.pollub.campusmate.schedule.entity.Schedule;
 import org.pollub.campusmate.team.entity.Team;
 import org.pollub.campusmate.utilities.validator.ValidPassword;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -22,7 +26,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class User{
+public class User implements UserDetails {
 
     @Id
     @Column(name = "user_id")
@@ -77,4 +81,33 @@ public class User{
     @JoinColumn(name = "event_id", referencedColumnName = "event_id")
     private Event event;
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

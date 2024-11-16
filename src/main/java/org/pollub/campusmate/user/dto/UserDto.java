@@ -4,7 +4,7 @@ package org.pollub.campusmate.user.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.pollub.campusmate.utilities.Role;
+import org.pollub.campusmate.utilities.security.Role;
 
 
 @Getter
