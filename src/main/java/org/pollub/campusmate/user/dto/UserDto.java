@@ -15,6 +15,4 @@ public class UserDto {
     private final String firstName;
     private final String lastName;
     private final Role role;
-
-
 }
