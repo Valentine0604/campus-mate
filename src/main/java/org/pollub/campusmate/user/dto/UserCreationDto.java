@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.pollub.campusmate.utilities.security.Role;
 import org.pollub.campusmate.utilities.validator.ValidPassword;
 
 @Getter
@@ -19,7 +20,7 @@ public class UserCreationDto {
 
     @NonNull
     @Enumerated(EnumType.STRING)
-    private final String role;
+    private final Role role;
 
     @ValidPassword
     private final String password;

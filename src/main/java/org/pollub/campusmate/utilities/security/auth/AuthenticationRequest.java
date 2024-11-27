@@ -1,15 +1,17 @@
 package org.pollub.campusmate.utilities.security.auth;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthenticationRequest {
+
+//    @NotBlank(message = "Email cannot be empty")
     private String email;
+
+//    @NotBlank(message = "Password cannot be empty")
     private String password;
 }

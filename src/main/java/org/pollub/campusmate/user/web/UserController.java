@@ -73,7 +73,7 @@ public class UserController {
         return new ResponseEntity<>("User updated successfully",HttpStatus.OK);
     }
 
-    @PutMapping("change-password/{userId}")
+    @PutMapping("/change-password/{userId}")
     public ResponseEntity<String> changePassword(@PathVariable Long userId, @Valid @RequestBody ChangePasswordDto passwordDTO, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             StringBuilder errorMessage = new StringBuilder();
@@ -84,21 +84,21 @@ public class UserController {
         return new ResponseEntity<>("Password changed successfully",HttpStatus.OK);
     }
 
-    @GetMapping("grades/{userId}")
+    @GetMapping("/grades/{userId}")
     public ResponseEntity<List<GradeDto>> getGradesByUserId(@PathVariable Long userId) {
         List<Grade> grades = userService.getUser(userId).getGrades();
         List<GradeDto> gradeDTOs = grades.stream().map(grade -> modelMapper.map(grade, GradeDto.class)).toList();
         return new ResponseEntity<>(gradeDTOs, HttpStatus.OK);
     }
 
-    @GetMapping("calendar/{userId}")
+    @GetMapping("/calendar/{userId}")
     public ResponseEntity<CalendarDto> getCalendarsByUserId(@PathVariable Long userId) {
         Calendar calendar = userService.getUser(userId).getCalendar();
         CalendarDto calendarDTO = modelMapper.map(calendar, CalendarDto.class);
         return new ResponseEntity<>(calendarDTO, HttpStatus.OK);
     }
 
-    @GetMapping("events/{userId}")
+    @GetMapping("/events/{userId}")
     public ResponseEntity<List<EventDto>> getEventsByUserId(@PathVariable Long userId) {
         return new ResponseEntity<>(userService.findEventsForUser(userId).stream().map(event -> modelMapper.map(event, EventDto.class)).toList(), HttpStatus.OK);
     }
