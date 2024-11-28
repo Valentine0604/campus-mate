@@ -21,8 +21,4 @@ public class UserCreationDto {
     @NonNull
     @Enumerated(EnumType.STRING)
     private final Role role;
-
-    @ValidPassword
-    private final String password;
-
 }

@@ -19,6 +19,7 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody UserCreationDto request) throws NoSuchAlgorithmException {
+        authenticationService.register(request);
         return ResponseEntity.ok(authenticationService.register(request));
     }
 

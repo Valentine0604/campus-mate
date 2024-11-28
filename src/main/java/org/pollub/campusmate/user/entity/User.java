@@ -47,10 +47,10 @@ public class User implements UserDetails {
     @Size(message = "Email cannot be longer than 100 characters ", max = 100)
     private String email;
 
-    @ValidPassword
-    @NonNull
-    @Column(name = "password", length = 12)
-    @Size(message = "Password must contain between 6 and 12 characters", min = 6, max = 12)
+//    @ValidPassword
+//    @NonNull
+//    @Column(name = "password", length = 12)
+//    @Size(message = "Password must contain between 6 and 12 characters", min = 6, max = 12)
     private String password;
 
 

@@ -10,6 +10,12 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 @Configuration
 @RequiredArgsConstructor
@@ -23,7 +29,6 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/authenticate").permitAll()
-                        .requestMatchers("/api/auth/register").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH,"/api/user/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE,"/api/user/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/user/**").hasAnyRole("STUDENT", "LECTURER")
@@ -37,6 +42,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/team/**").hasAnyRole("LECTURER", "ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/team/**").hasAnyRole("LECTURER", "ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/api/team/**").hasAnyRole("LECTURER", "ADMIN")
+                        .requestMatchers("/api/auth/register").permitAll()
 
                         //todo: add endpoints
 
@@ -51,4 +57,17 @@ public class SecurityConfig {
 
         return http.build();
     }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:8080")); // or use Collections.singletonList("*") for all origins
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        configuration.setAllowedHeaders(Collections.singletonList("*"));
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
 }

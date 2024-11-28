@@ -9,7 +9,7 @@ import java.security.SecureRandom;
 
 public class GeneratePassword {
 
-    public static String GeneratePassword() throws NoSuchAlgorithmException {
+    public static String generatePassword() throws NoSuchAlgorithmException {
         CharacterRule LCR = new CharacterRule(EnglishCharacterData.LowerCase);
         LCR.setNumberOfCharacters(4);
 
