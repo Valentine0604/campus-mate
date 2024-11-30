@@ -15,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import static org.pollub.campusmate.utilities.security.config.PasswdGenerator.generatePassword;
-import static org.pollub.campusmate.utilities.service.EmailSenderService.sendEmail;
+import org.pollub.campusmate.utilities.service.EmailSenderService;
 
 @Service
 @RequiredArgsConstructor
@@ -25,28 +25,39 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final EmailSenderService emailSenderService;
 
     public AuthenticationResponse register(UserCreationDto request) throws NoSuchAlgorithmException {
         String rawPassword = generatePassword();
 
-        if(rawPassword == null || rawPassword.isEmpty()){
+        System.out.println(rawPassword);
+
+        if (rawPassword == null || rawPassword.isEmpty()) {
             throw new IllegalArgumentException("Generated password cannot be null");
         }
-
-        String encodedPassword = passwordEncoder.encode(rawPassword);
 
         var createdUser = User.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .email(request.getEmail())
-                .password(encodedPassword)
+                .password(rawPassword)
                 .role(request.getRole())
                 .build();
 
+        String encodedPassword = passwordEncoder.encode(rawPassword);
+
+        createdUser.setPassword(encodedPassword);
+
         userRepository.save(createdUser);
+
         var jwtToken = jwtService.generateToken(createdUser);
 
-        sendEmail(createdUser.getEmail(), "Welcome to CampusMate", "Your credentials are as follows: \nEmail: " + createdUser.getEmail() + "\nPassword: " + createdUser.getPassword() + "\n\nPlease change your password after logging in.");
+        // Use the injected emailSenderService to send the email
+        emailSenderService.sendEmail(
+                createdUser.getEmail(),
+                "Welcome to CampusMate",
+                "Your credentials are as follows: \nEmail: " + createdUser.getEmail() + "\nPassword: " + rawPassword + "\n\nPlease change your password after logging in."
+        );
 
         return AuthenticationResponse.builder().token(jwtToken).build();
     }

@@ -9,16 +9,15 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class EmailSenderService {
 
-    private static JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
 
-    public static void sendEmail(String recipient, String subject, String body) {
+    public void sendEmail(String recipient, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("campusmatehelp@gmail.com");
+
         message.setTo(recipient);
         message.setSubject(subject);
         message.setText(body);
 
         mailSender.send(message);
     }
-
 }

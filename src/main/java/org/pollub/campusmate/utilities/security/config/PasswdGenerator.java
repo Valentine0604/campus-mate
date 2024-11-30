@@ -3,18 +3,31 @@ package org.pollub.campusmate.utilities.security.config;
 import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
 import org.passay.PasswordGenerator;
+import org.passay.CharacterData;
 
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 public class PasswdGenerator {
 
     public static String generatePassword() {
+
+        CharacterData specialCharacterData = new CharacterData() {
+            @Override
+            public String getErrorCode() {
+                return "INSUFFICIENT_SPECIAL";
+            }
+
+            @Override
+            public String getCharacters() {
+                return "-_@$!%*?&";
+            }
+        };
+
         // Define rules for password generation
-        CharacterRule lowerCaseRule = new CharacterRule(EnglishCharacterData.LowerCase, 1); // At least one lowercase letter
-        CharacterRule upperCaseRule = new CharacterRule(EnglishCharacterData.UpperCase, 1); // At least one uppercase letter
-        CharacterRule digitRule = new CharacterRule(EnglishCharacterData.Digit, 1);         // At least one digit
-        CharacterRule specialCharRule = new CharacterRule(EnglishCharacterData.Special, 1); // At least one special character
+        CharacterRule lowerCaseRule = new CharacterRule(EnglishCharacterData.LowerCase, 1);
+        CharacterRule upperCaseRule = new CharacterRule(EnglishCharacterData.UpperCase, 1);
+        CharacterRule digitRule = new CharacterRule(EnglishCharacterData.Digit, 1);
+        CharacterRule specialCharRule = new CharacterRule(specialCharacterData, 1);
 
         // Ensure password length is between 6 and 12
         int minPasswordLength = 6;
@@ -25,14 +38,14 @@ public class PasswdGenerator {
 
         PasswordGenerator passwordGenerator = new PasswordGenerator();
 
-        // Generate password with the defined length and rules
-        String password = passwordGenerator.generatePassword(passwordLength, lowerCaseRule, upperCaseRule, digitRule, specialCharRule);
+        // Attempt password generation until it meets requirements
+        String password = "";
+        do {
+            password = passwordGenerator.generatePassword(passwordLength,
+                    lowerCaseRule, upperCaseRule, digitRule, specialCharRule);
+        } while (!password.matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[-_@$!%*?&])[A-Za-z\\d-_@$!%*?&]{6,12}$"));
 
         return password;
     }
 
-    public static void main(String[] args) {
-        // Example usage
-        System.out.println(generatePassword());
-    }
 }

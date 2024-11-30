@@ -2,6 +2,7 @@ package org.pollub.campusmate.user.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.pollub.campusmate.utilities.security.Role;
@@ -47,10 +48,8 @@ public class User implements UserDetails {
     @Size(message = "Email cannot be longer than 100 characters ", max = 100)
     private String email;
 
-//    @ValidPassword
-//    @NonNull
-//    @Column(name = "password", length = 12)
-//    @Size(message = "Password must contain between 6 and 12 characters", min = 6, max = 12)
+    //todo
+    //@Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[-_@$!%*?&])[A-Za-z\\d-_@$!%*?&]{6,12}$", message = "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character, and be between 6 and 12 characters.")
     private String password;
 
 

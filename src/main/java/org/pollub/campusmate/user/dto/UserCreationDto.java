@@ -3,6 +3,8 @@ package org.pollub.campusmate.user.dto;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,8 +16,14 @@ import org.pollub.campusmate.utilities.validator.ValidPassword;
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
 public class UserCreationDto {
+
+    @Email
     private final String email;
+
+    @NonNull
     private final String firstName;
+
+    @NonNull
     private final String lastName;
 
     @NonNull
