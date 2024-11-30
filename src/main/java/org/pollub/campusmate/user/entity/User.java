@@ -48,14 +48,16 @@ public class User implements UserDetails {
     @Size(message = "Email cannot be longer than 100 characters ", max = 100)
     private String email;
 
-    //todo
-    //@Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[-_@$!%*?&])[A-Za-z\\d-_@$!%*?&]{6,12}$", message = "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character, and be between 6 and 12 characters.")
+    @NonNull
+    @Size(max = 100)
+    @Column(name = "password")
     private String password;
-
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role_name")
     private Role role;
+
+    private boolean isFirstPasswordChanged;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Grade> grades;

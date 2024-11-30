@@ -1,5 +1,8 @@
 package org.pollub.campusmate.utilities.security.auth;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Size;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import java.security.NoSuchAlgorithmException;
@@ -42,6 +45,7 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .password(rawPassword)
                 .role(request.getRole())
+                .isFirstPasswordChanged(false)
                 .build();
 
         String encodedPassword = passwordEncoder.encode(rawPassword);
@@ -52,11 +56,11 @@ public class AuthenticationService {
 
         var jwtToken = jwtService.generateToken(createdUser);
 
-        // Use the injected emailSenderService to send the email
         emailSenderService.sendEmail(
                 createdUser.getEmail(),
                 "Welcome to CampusMate",
                 "Your credentials are as follows: \nEmail: " + createdUser.getEmail() + "\nPassword: " + rawPassword + "\n\nPlease change your password after logging in."
+                + "\n\nBest regards,\nCampusMate Team"
         );
 
         return AuthenticationResponse.builder().token(jwtToken).build();
@@ -73,8 +77,24 @@ public class AuthenticationService {
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UserNotFound("User with email " + request.getEmail() + " not found"));
 
+        if(!user.isFirstPasswordChanged()){
+            throw new IllegalArgumentException("Generated password must be changed");
+        }
+
         var jwtToken = jwtService.generateToken(user);
 
         return AuthenticationResponse.builder().token(jwtToken).build();
+    }
+
+    public void changePassword(String email, String newPassword) {
+        var user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFound("User with email " + email + " not found"));
+
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        user.setPassword(encodedPassword);
+
+        user.setFirstPasswordChanged(true);
+
+        userRepository.save(user);
     }
 }
