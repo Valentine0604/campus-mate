@@ -2,9 +2,6 @@ package org.pollub.campusmate.utilities.security.auth;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Size;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import java.security.NoSuchAlgorithmException;
