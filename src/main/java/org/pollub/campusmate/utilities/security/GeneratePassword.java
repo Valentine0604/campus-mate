@@ -7,6 +7,7 @@ import org.passay.PasswordGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
+@SuppressWarnings("deprecation")
 public class GeneratePassword {
 
     public static String generatePassword() throws NoSuchAlgorithmException {
@@ -26,7 +27,7 @@ public class GeneratePassword {
 
         PasswordGenerator passwordGenerator = new PasswordGenerator();
 
-        return passwordGenerator.generatePassword(passwordLength, LCR, UCR, DR, SCR); //todo: find non deprecated solution
+        return passwordGenerator.generatePassword(passwordLength, LCR, UCR, DR, SCR);
 
 
 

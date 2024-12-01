@@ -1,5 +1,6 @@
 package org.pollub.campusmate.utilities.security.auth;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.pollub.campusmate.user.dto.ChangePasswordDto;
@@ -22,27 +23,32 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody UserCreationDto request) throws NoSuchAlgorithmException {
-        AuthenticationResponse response = authenticationService.register(request);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<AuthenticationResponse> register(@RequestBody UserCreationDto request, HttpServletResponse servletResponse) throws NoSuchAlgorithmException {
+        AuthenticationResponse authResponse = authenticationService.register(request, servletResponse);
+        return ResponseEntity.ok(authResponse);
     }
 
-
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
-        AuthenticationResponse response = authenticationService.authenticate(request);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request, HttpServletResponse servletResponse) {
+        AuthenticationResponse authResponse = authenticationService.authenticate(request, servletResponse);
+        return ResponseEntity.ok(authResponse);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletResponse servletResponse) {
+        authenticationService.logout(servletResponse);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/change-password")
     public ResponseEntity<Void> changePassword(@Valid @RequestBody ChangePasswordDto request, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             StringBuilder errorMessage = new StringBuilder();
             bindingResult.getAllErrors().forEach(error -> errorMessage.append(error.getDefaultMessage()).append("\n"));
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().build();
         }
+
         authenticationService.changePassword(request.getEmail(), request.getNewPassword());
         return new ResponseEntity<>(HttpStatus.OK);
-
     }
 }

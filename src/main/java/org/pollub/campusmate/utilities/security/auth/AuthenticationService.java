@@ -1,5 +1,7 @@
 package org.pollub.campusmate.utilities.security.auth;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.NonNull;
@@ -30,7 +32,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final EmailSenderService emailSenderService;
 
-    public AuthenticationResponse register(UserCreationDto request) throws NoSuchAlgorithmException {
+    public AuthenticationResponse register(UserCreationDto request, HttpServletResponse response) throws NoSuchAlgorithmException {
         String rawPassword = generatePassword();
 
         System.out.println(rawPassword);
@@ -39,34 +41,35 @@ public class AuthenticationService {
             throw new IllegalArgumentException("Generated password cannot be null");
         }
 
+        String encodedPassword = passwordEncoder.encode(rawPassword);
+
         var createdUser = User.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .email(request.getEmail())
-                .password(rawPassword)
+                .password(encodedPassword)
                 .role(request.getRole())
                 .isFirstPasswordChanged(false)
                 .build();
 
-        String encodedPassword = passwordEncoder.encode(rawPassword);
-
-        createdUser.setPassword(encodedPassword);
-
         userRepository.save(createdUser);
 
         var jwtToken = jwtService.generateToken(createdUser);
+        addJwtCookie(response, jwtToken);
 
         emailSenderService.sendEmail(
                 createdUser.getEmail(),
                 "Welcome to CampusMate",
-                "Your credentials are as follows: \nEmail: " + createdUser.getEmail() + "\nPassword: " + rawPassword + "\n\nPlease change your password after logging in."
-                + "\n\nBest regards,\nCampusMate Team"
-        );
+                "Hello " + createdUser.getFirstName() + " " + createdUser.getLastName() + ",\n"
+                        + "Your credentials are as follows: \nEmail: " + createdUser.getEmail()
+                        + "\nPassword: " + rawPassword
+                        + "\n\nPlease change your password after logging in."
+                        + "\n\nBest regards,\nCampusMate Team");
 
         return AuthenticationResponse.builder().token(jwtToken).build();
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationResponse authenticate(AuthenticationRequest request, HttpServletResponse response) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -82,8 +85,13 @@ public class AuthenticationService {
         }
 
         var jwtToken = jwtService.generateToken(user);
+        addJwtCookie(response, jwtToken);
 
         return AuthenticationResponse.builder().token(jwtToken).build();
+    }
+
+    public void logout(HttpServletResponse response){
+        clearJwtCookie(response);
     }
 
     public void changePassword(String email, String newPassword) {
@@ -96,5 +104,25 @@ public class AuthenticationService {
         user.setFirstPasswordChanged(true);
 
         userRepository.save(user);
+    }
+
+    private void addJwtCookie(HttpServletResponse response, String token){
+        Cookie jwtCookie = new Cookie("jwt", token);
+        jwtCookie.setHttpOnly(true);
+        jwtCookie.setSecure(true);
+        jwtCookie.setPath("/");
+        jwtCookie.setMaxAge(24 * 60 * 60);
+
+        response.addCookie(jwtCookie);
+    }
+
+    private void clearJwtCookie(HttpServletResponse response){
+        Cookie jwtCookie = new Cookie("jwt", null);
+        jwtCookie.setHttpOnly(true);
+        jwtCookie.setSecure(true);
+        jwtCookie.setPath("/");
+        jwtCookie.setMaxAge(0);
+
+        response.addCookie(jwtCookie);
     }
 }

@@ -27,26 +27,13 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)  // Disable CSRF protection globally
-                .headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)  // Allow frames from the same origin (H2 console in the same app)
-                )
+        http.csrf(AbstractHttpConfigurer::disable)  // Wyłącz CSRF
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Włącz obsługę CORS
+                .headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))  // Obsługa H2
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/authenticate").permitAll()
                         .requestMatchers("/api/auth/register").permitAll()
-                        .requestMatchers(HttpMethod.PATCH, "/api/user/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/user/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/user/**").hasAnyRole("STUDENT", "LECTURER")
-                        .requestMatchers(HttpMethod.POST, "/api/user/**").hasRole("ADMIN")
-                        .requestMatchers("/api/user/change-password/**").hasAnyRole("STUDENT", "LECTURER", "ADMIN")
-                        .requestMatchers("/api/user/grades/**").hasAnyRole("STUDENT", "LECTURER")
-                        .requestMatchers("/api/user/calendar/**").hasAnyRole("STUDENT", "LECTURER")
-                        .requestMatchers("/api/user/events/**").hasAnyRole("STUDENT", "LECTURER")
-                        .requestMatchers(HttpMethod.GET, "/api/user").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/team/**").hasAnyRole("STUDENT", "LECTURER", "ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/team/**").hasAnyRole("LECTURER", "ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/team/**").hasAnyRole("LECTURER", "ADMIN")
-                        .requestMatchers(HttpMethod.PATCH, "/api/team/**").hasAnyRole("LECTURER", "ADMIN")
-                        .requestMatchers("/h2/**").permitAll()  // Allow access to H2 console
+                        .requestMatchers("/h2/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -55,15 +42,18 @@ public class SecurityConfig {
 
         return http.build();
     }
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:8080"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:8080")); // Dodaj swoje adresy
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Collections.singletonList("*"));
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
 }
