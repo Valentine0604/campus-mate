@@ -100,6 +100,8 @@ public class AuthenticationService {
 
         user.setFirstPasswordChanged(true);
 
+
+
         userRepository.save(user);
     }
 

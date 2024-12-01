@@ -37,7 +37,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         Cookie[] cookies = request.getCookies();
 
-        if(cookies == null){
+        if (cookies == null) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -46,28 +46,48 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 .filter(cookie -> "jwt".equals(cookie.getName()))
                 .findFirst();
 
-        if(jwtCookie.isEmpty()){
+        if (jwtCookie.isEmpty()) {
             filterChain.doFilter(request, response);
             return;
         }
 
         jwtToken = jwtCookie.get().getValue();
-        userEmail = jwtService.extractUsername(jwtToken);
 
-        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+        try {
+            userEmail = jwtService.extractUsername(jwtToken);
 
-            if (jwtService.isTokenValid(jwtToken, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities());
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+            if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+
+                if (jwtService.isTokenValid(jwtToken, userDetails)) {
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities());
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
             }
+        } catch (Exception e) {
+            // Token is invalid or expired
+            clearAuthenticationAndInvalidateCookie(response);
+            return;
         }
 
         filterChain.doFilter(request, response);
     }
 
+    private void clearAuthenticationAndInvalidateCookie(HttpServletResponse response) {
+        // Clear the security context
+        SecurityContextHolder.clearContext();
+
+        // Invalidate the JWT cookie
+        Cookie invalidCookie = new Cookie("jwt", null);
+        invalidCookie.setMaxAge(0);  // Expire immediately
+        invalidCookie.setPath("/");  // Ensure it matches the original cookie's path
+        response.addCookie(invalidCookie);
+
+        // Optionally, you can set a response status to indicate unauthorized access
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+    }
 }
