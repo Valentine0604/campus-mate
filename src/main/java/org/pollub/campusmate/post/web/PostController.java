@@ -22,9 +22,11 @@ public class PostController {
     private final ModelMapper modelMapper;
 
     @GetMapping("/{postId}")
-    public ResponseEntity<PostDto> getPosts(@PathVariable Long postId) {
+    public ResponseEntity<PostDto> getPost(@PathVariable Long postId) {
+        //post.getUser().getEmail()
+        //TODO: add user email
         Post post = postService.getPost(postId);
-        PostDto postDTO = new PostDto(post.getPostTitle(), post.getPostContent(), post.getUser().getEmail(), post.getCreatedAt(), post.getUpdatedAt());
+        PostDto postDTO = new PostDto(post.getPostId(), post.getPostTitle(), post.getPostContent(), "anonymous", post.getCreatedAt(), post.getUpdatedAt());
         return new ResponseEntity<>(postDTO, HttpStatus.OK);
     }
 
@@ -50,6 +52,7 @@ public class PostController {
         List<PostDto> postsDTO = new ArrayList<>();
         posts.forEach(post -> {
             PostDto postDTO = new PostDto();
+            postDTO.setPostId(post.getPostId());
             postDTO.setPostTitle(post.getPostTitle());
             postDTO.setPostContent(post.getPostContent());
             if (post.getUser() != null){

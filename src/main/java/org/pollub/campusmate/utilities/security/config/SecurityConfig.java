@@ -32,9 +32,9 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Włącz obsługę CORS
                 .headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))  // Obsługa H2
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/authenticate").permitAll()
+                        .requestMatchers(HttpMethod.POST ,"/api/auth/authenticate").permitAll()
                         .requestMatchers("/api/auth/register").permitAll()
-                        .requestMatchers("/api/auth/logout").permitAll() // Dodaj ścieżkę wylogowania
+                        .requestMatchers("/api/auth/logout").permitAll() // Dodaj ścieżkę wylogowania// Dodaj ścieżkę wylogowania
                         .requestMatchers("/h2/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Dodaj zezwolenie na żądania OPTIONS
                         .anyRequest().authenticated()
@@ -44,9 +44,7 @@ public class SecurityConfig {
                         .clearAuthentication(true)
                         .deleteCookies("jwt") // Usuń cookie JWT podczas wylogowania
                 )
-                .formLogin(form -> form
-                        .successHandler(authenticationSuccessHandler)
-                )
+                .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
@@ -59,7 +57,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:8080")); // Dodaj swoje adresy
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        configuration.setAllowedHeaders(Arrays.asList("*")); // Zmień z Collections.singletonList na Arrays.asList
+        configuration.setAllowedHeaders(Arrays.asList("*", "Content-Type", "Authorization")); // Zmień z Collections.singletonList na Arrays.asList
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L); // Dodaj cache dla preflight requests
 

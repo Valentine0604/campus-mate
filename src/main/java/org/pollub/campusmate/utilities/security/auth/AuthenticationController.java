@@ -1,5 +1,6 @@
 package org.pollub.campusmate.utilities.security.auth;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,7 @@ import org.pollub.campusmate.user.dto.UserCreationDto;
 import org.pollub.campusmate.user.entity.User;
 import org.pollub.campusmate.user.exception.UserNotFound;
 import org.pollub.campusmate.user.repository.UserRepository;
+import org.pollub.campusmate.utilities.security.Role;
 import org.pollub.campusmate.utilities.service.EmailSenderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -71,4 +74,7 @@ public class AuthenticationController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+
+
 }

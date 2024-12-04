@@ -1,5 +1,6 @@
 package org.pollub.campusmate.utilities.security.auth;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.pollub.campusmate.user.dto.UserCreationDto;
 import org.pollub.campusmate.user.entity.User;
 import org.pollub.campusmate.user.exception.UserNotFound;
 import org.pollub.campusmate.user.repository.UserRepository;
+import org.pollub.campusmate.utilities.security.Role;
 import org.pollub.campusmate.utilities.security.config.JwtService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -108,10 +110,10 @@ public class AuthenticationService {
     private void addJwtCookie(HttpServletResponse response, String token){
         Cookie jwtCookie = new Cookie("jwt", token);
         jwtCookie.setHttpOnly(true);
-        jwtCookie.setSecure(true);
+        jwtCookie.setSecure(false);
         jwtCookie.setPath("/");
         jwtCookie.setMaxAge(24 * 60 * 60);
-
+        jwtCookie.setDomain("localhost");
         response.addCookie(jwtCookie);
     }
 
@@ -123,5 +125,15 @@ public class AuthenticationService {
         jwtCookie.setMaxAge(0);
 
         response.addCookie(jwtCookie);
+    }
+
+    @PostConstruct
+    public void initializeUsers() {
+        User user = new User();
+        user.setEmail("admin@admin.pl");
+        user.setPassword(passwordEncoder.encode("Admin1_"));
+        user.setRole(Role.valueOf("ADMIN"));
+        user.setFirstPasswordChanged(true);
+        userRepository.save(user);
     }
 }
