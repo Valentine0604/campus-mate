@@ -112,7 +112,7 @@ public class AuthenticationService {
 
     private void addJwtCookie(HttpServletResponse response, String token){
         Cookie jwtCookie = new Cookie("jwt", token);
-        jwtCookie.setHttpOnly(true);
+        jwtCookie.setHttpOnly(false);
         jwtCookie.setSecure(false);
         jwtCookie.setPath("/");
         jwtCookie.setMaxAge(24 * 60 * 60);
@@ -122,7 +122,7 @@ public class AuthenticationService {
 
     private void clearJwtCookie(HttpServletResponse response){
         Cookie jwtCookie = new Cookie("jwt", null);
-        jwtCookie.setHttpOnly(true);
+        jwtCookie.setHttpOnly(false);
         jwtCookie.setSecure(true);
         jwtCookie.setPath("/");
         jwtCookie.setMaxAge(0);
