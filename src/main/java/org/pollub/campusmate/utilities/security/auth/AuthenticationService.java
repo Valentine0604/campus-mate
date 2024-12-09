@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.HashMap;
+
 import org.pollub.campusmate.user.dto.UserCreationDto;
 import org.pollub.campusmate.user.entity.User;
 import org.pollub.campusmate.user.exception.UserNotFound;
@@ -82,8 +84,9 @@ public class AuthenticationService {
         if(!user.isFirstPasswordChanged()){
             throw new IllegalArgumentException("Generated password must be changed");
         }
-
-        var jwtToken = jwtService.generateToken(user);
+        var extraClaims = new HashMap<String, Object>();
+        extraClaims.put("role", user.getRole());
+        var jwtToken = jwtService.generateToken(extraClaims, user);
         addJwtCookie(response, jwtToken);
 
         return AuthenticationResponse.builder().token(jwtToken).build();
