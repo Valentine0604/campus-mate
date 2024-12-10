@@ -86,6 +86,7 @@ public class AuthenticationService {
         }
         var extraClaims = new HashMap<String, Object>();
         extraClaims.put("role", user.getRole());
+        extraClaims.put("userId", user.getUserId());
         var jwtToken = jwtService.generateToken(extraClaims, user);
         addJwtCookie(response, jwtToken);
 

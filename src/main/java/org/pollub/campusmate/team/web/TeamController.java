@@ -73,4 +73,6 @@ public class TeamController {
     public ResponseEntity<List<TeamDto>> getAllTeams() {
         return new ResponseEntity<>(teamService.getAllTeams().stream().map(team -> modelMapper.map(team, TeamDto.class)).toList(), HttpStatus.OK);
     }
+
+    //TODO: add delete user from team and teams by userId
 }

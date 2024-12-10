@@ -24,7 +24,7 @@ public class PostController {
     @GetMapping("/{postId}")
     public ResponseEntity<PostDto> getPost(@PathVariable Long postId) {
         //post.getUser().getEmail()
-        //TODO: add user email
+        //TODO: add user email and change format of the dates
         Post post = postService.getPost(postId);
         PostDto postDTO = new PostDto(post.getPostId(), post.getPostTitle(), post.getPostContent(), "anonymous", post.getCreatedAt(), post.getUpdatedAt());
         return new ResponseEntity<>(postDTO, HttpStatus.OK);

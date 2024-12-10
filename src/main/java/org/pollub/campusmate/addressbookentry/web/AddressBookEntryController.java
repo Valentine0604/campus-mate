@@ -29,7 +29,7 @@ public class AddressBookEntryController {
         return new ResponseEntity<>(addressBookEntryDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/{contactName}")
+    @GetMapping("/search/{contactName}")
     public ResponseEntity<AddressBookEntryDto> getAddressBookEntryByContactName(@PathVariable String contactName) {
         AddressBookEntry addressBookEntry = addressBookEntryService.getAddressBookEntryByContactName(contactName);
         AddressBookEntryDto addressBookEntryDTO = modelMapper.map(addressBookEntry, AddressBookEntryDto.class);
