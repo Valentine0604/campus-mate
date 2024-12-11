@@ -36,16 +36,16 @@ public class AuthenticationController {
         return ResponseEntity.ok(authResponse);
     }
 
-    @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request, HttpServletResponse servletResponse) {
+    @PostMapping("/login")
+    public ResponseEntity<String> authenticate(@RequestBody AuthenticationRequest request, HttpServletResponse servletResponse) {
         AuthenticationResponse authResponse = authenticationService.authenticate(request, servletResponse);
-        return ResponseEntity.ok(authResponse);
+        return new ResponseEntity<>("Logged in successfully", HttpStatus.OK);
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(HttpServletResponse servletResponse) {
+    public ResponseEntity<String> logout(HttpServletResponse servletResponse) {
         authenticationService.logout(servletResponse);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>("Logged out successfully", HttpStatus.OK);
     }
 
     @PostMapping("/change-password/{userId}")

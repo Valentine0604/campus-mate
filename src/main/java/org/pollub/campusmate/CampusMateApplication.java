@@ -12,16 +12,6 @@ import org.springframework.context.annotation.Bean;
 @AllArgsConstructor
 public class CampusMateApplication {
 
-    private final AddressBookService addressBookService;
-
-    @Bean
-    public CommandLineRunner createAddressBook(AddressBookService addressBookService) {
-        return args -> {
-            AddressBook addressBook = new AddressBook("Pollub Address Book");
-            addressBookService.createAddressBook(addressBook);
-        };
-    }
-
     public static void main(String[] args) {
         SpringApplication.run(CampusMateApplication.class, args);
     }

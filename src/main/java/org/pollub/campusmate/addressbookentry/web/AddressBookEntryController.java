@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -65,7 +66,14 @@ public class AddressBookEntryController {
 
     @GetMapping("/all")
     public ResponseEntity<List<AddressBookEntryDto>> getAllAddressBookEntries() {
-        return new ResponseEntity<>(addressBookEntryService.getAllAddressBookEntries().stream()
-                .map(addressBookEntry -> modelMapper.map(addressBookEntry, AddressBookEntryDto.class)).toList(), HttpStatus.OK);
+        List<AddressBookEntry> foundEntries = addressBookEntryService.getAllAddressBookEntries();
+        List<AddressBookEntryDto> entriesToDisplay = new ArrayList<>();
+
+        for(AddressBookEntry entry : foundEntries){
+            AddressBookEntryDto addressBookEntryToDisplay = modelMapper.map(entry, AddressBookEntryDto.class);
+            entriesToDisplay.add(addressBookEntryToDisplay);
+        }
+
+        return new ResponseEntity<>(entriesToDisplay, HttpStatus.OK);
     }
 }
