@@ -12,6 +12,7 @@ import org.pollub.campusmate.utilities.validator.ValidPhoneNumber;
 @Table(name = "address_book_entry")
 @Data
 @NoArgsConstructor
+@RequiredArgsConstructor
 public class AddressBookEntry {
 
     @Id
@@ -29,13 +30,11 @@ public class AddressBookEntry {
     @Email
     private String email;
 
-    @ValidPhoneNumber
-    @NonNull
+    //@ValidPhoneNumber
     @Column(name = "phone_number", length = 9)
     @Size(message = "Phone number cannot be longer than 9 characters", max = 9)
     private String phoneNumber;
 
-    @NonNull
     @Column(name = "class_number", length = 5)
     private String classNumber;
 

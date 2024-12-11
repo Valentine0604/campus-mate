@@ -13,12 +13,18 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/addressBook")
+@RequestMapping("/api/addressbook")
 public class AddressBookController {
 
     private final AddressBookService addressBookService;
     private final ModelMapper modelMapper;
 
+
+    @GetMapping
+    public ResponseEntity<AddressBookDto> getAddressBookByBookName() {
+        AddressBook addressBook = addressBookService.getAddressBookByBookName("Pollub Address Book");
+        return new ResponseEntity<>(modelMapper.map(addressBook, AddressBookDto.class), HttpStatus.OK);
+    }
 
     @PostMapping
     public ResponseEntity<String> createAddressBook(@RequestBody AddressBook addressBook) {
@@ -39,10 +45,10 @@ public class AddressBookController {
         return new ResponseEntity<>("AddressBook updated successfully", HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<List<AddressBookDto>> getAllAddressBooks() {
-        return new ResponseEntity<>(addressBookService.getAllAddressBooks().stream().map(addressBook -> modelMapper.map(addressBook, AddressBookDto.class)).toList(), HttpStatus.OK);
-    }
+//    @GetMapping
+//    public ResponseEntity<List<AddressBookDto>> getAllAddressBooks() {
+//        return new ResponseEntity<>(addressBookService.getAllAddressBooks().stream().map(addressBook -> modelMapper.map(addressBook, AddressBookDto.class)).toList(), HttpStatus.OK);
+//    }
 
 
 }

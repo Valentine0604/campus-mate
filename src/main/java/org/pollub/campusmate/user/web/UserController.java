@@ -3,6 +3,7 @@ package org.pollub.campusmate.user.web;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.pollub.campusmate.addressbookentry.entity.AddressBookEntry;
 import org.pollub.campusmate.utilities.security.Role;
 import org.pollub.campusmate.calendar.dto.CalendarDto;
 import org.pollub.campusmate.calendar.entity.Calendar;
@@ -57,6 +58,13 @@ public class UserController {
         }
         User user = modelMapper.map(userDTO, User.class);
         user.setCalendar(new Calendar(user.getFirstName() + " " + user.getLastName() + "'s calendar", new ArrayList<>(),user));
+
+        if(user.getRole().equals(Role.LECTURER)){
+            String contactName = user.getFirstName() + " " + user.getLastName();
+            AddressBookEntry entry = new AddressBookEntry(contactName, user.getEmail());
+            addressBookEntryService.saveAddressBookEntry(entry);
+        }
+
         userService.addUser(user);
         return new ResponseEntity<>("User created successfully",HttpStatus.CREATED);
     }

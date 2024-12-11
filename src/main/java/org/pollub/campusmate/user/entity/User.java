@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.pollub.campusmate.utilities.security.Role;
 import org.pollub.campusmate.addressbookentry.entity.AddressBookEntry;
 import org.pollub.campusmate.calendar.entity.Calendar;
@@ -27,6 +28,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class User implements UserDetails {
 
     @Id
@@ -110,5 +112,19 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("userId", userId)
+                .append("email", email)
+                .append("firstName", firstName)
+                .append("lastName", lastName)
+                .append("role", role)
+                .append("isFirstPasswordChanged", isFirstPasswordChanged)
+                .append("password", password)
+                .append("calendars", calendar)
+                .toString();
     }
 }

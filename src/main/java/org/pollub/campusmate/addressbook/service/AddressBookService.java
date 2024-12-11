@@ -7,6 +7,7 @@ import org.pollub.campusmate.addressbook.repository.AddressBookRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -51,6 +52,9 @@ public class AddressBookService {
     }
 
 
+    public AddressBook getAddressBookByBookName(String addressBookName) {
+        return addressBookRepository.findByBookName(addressBookName)
+                .orElseThrow(() -> new AddressBookNotFound("Address book with name " + addressBookName + " not found"));
 
-
+    }
 }

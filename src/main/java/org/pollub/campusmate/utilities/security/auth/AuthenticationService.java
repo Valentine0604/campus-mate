@@ -7,8 +7,12 @@ import lombok.RequiredArgsConstructor;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.pollub.campusmate.addressbookentry.entity.AddressBookEntry;
+import org.pollub.campusmate.addressbookentry.service.AddressBookEntryService;
+import org.pollub.campusmate.calendar.entity.Calendar;
 import org.pollub.campusmate.user.dto.UserCreationDto;
 import org.pollub.campusmate.user.entity.User;
 import org.pollub.campusmate.user.exception.UserNotFound;
@@ -30,6 +34,7 @@ import org.pollub.campusmate.utilities.service.EmailSenderService;
 public class AuthenticationService {
 
     private final UserRepository userRepository;
+    private final AddressBookEntryService addressBookEntryService;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -54,6 +59,15 @@ public class AuthenticationService {
                 .role(request.getRole())
                 .isFirstPasswordChanged(false)
                 .build();
+
+        createdUser.setCalendar(new Calendar(createdUser.getFirstName() + " " + createdUser.getLastName() + "'s calendar", new ArrayList<>(),createdUser));
+
+        if(createdUser.getRole().equals(Role.LECTURER)){
+            String contactName = createdUser.getFirstName() + " " + createdUser.getLastName();
+            AddressBookEntry entry = new AddressBookEntry(contactName, createdUser.getEmail());
+            addressBookEntryService.saveAddressBookEntry(entry);
+        }
+
 
         userRepository.save(createdUser);
 
