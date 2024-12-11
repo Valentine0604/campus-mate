@@ -59,10 +59,9 @@ public class AuthenticationController {
         User selectedUser = userRepository.findById(userId).orElseThrow(() -> new UserNotFound("User with id " + userId + " not found"));
 
 
-        if(!passwordEncoder.matches(request.getOldPassword(),selectedUser.getPassword())) {
+        if (!passwordEncoder.matches(request.getOldPassword(), selectedUser.getPassword())) {
             return ResponseEntity.badRequest().body("Old password is incorrect");
-        }
-        else if(!request.getNewPassword().equals(request.getConfirmPassword())) {
+        } else if (!request.getNewPassword().equals(request.getConfirmPassword())) {
             return ResponseEntity.badRequest().body("New and confirm passwords don't match");
         }
 
@@ -74,7 +73,4 @@ public class AuthenticationController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-
-
 }

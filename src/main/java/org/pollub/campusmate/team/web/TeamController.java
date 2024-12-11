@@ -20,7 +20,7 @@ import java.util.List;
 public class TeamController {
 
     private final ModelMapper modelMapper;
-    TeamService teamService;
+    private final TeamService teamService;
 
     @GetMapping("/{teamId}")
     public ResponseEntity<TeamDto> getTeam(@PathVariable Long teamId) {
@@ -47,6 +47,12 @@ public class TeamController {
         return new ResponseEntity<>("Team deleted successfully",HttpStatus.NO_CONTENT);
     }
 
+    @DeleteMapping("/{teamId}/removeUser/{userId}")
+    public ResponseEntity<String> removeTeamUser(@PathVariable Long teamId, @PathVariable Long userId) {
+        teamService.removeUserFromTeam(teamId, userId);
+        return new ResponseEntity<>("User removed from team successfully",HttpStatus.NO_CONTENT);
+    }
+
     @PatchMapping("/{teamId}")
     public ResponseEntity<String> updateTeam(@PathVariable Long teamId, @RequestBody TeamDto teamDTO) {
         Team team = modelMapper.map(teamDTO, Team.class);
@@ -54,17 +60,17 @@ public class TeamController {
         return new ResponseEntity<>("Team updated successfully",HttpStatus.OK);
     }
 
-    @GetMapping("users/{teamId}")
+    @GetMapping("/{teamId}/users")
     public ResponseEntity<List<UserDto>> getTeamUsers(@PathVariable Long teamId) {
         return new ResponseEntity<>(teamService.getTeam(teamId).getUsers().stream().map(user -> modelMapper.map(user, UserDto.class)).toList(), HttpStatus.OK);
     }
 
-    @GetMapping("posts/{teamId}")
+    @GetMapping("/{teamId}/posts")
     public ResponseEntity<List<PostDto>> getTeamPosts(@PathVariable Long teamId) {
         return new ResponseEntity<>(teamService.getTeam(teamId).getPosts().stream().map(post -> modelMapper.map(post, PostDto.class)).toList(), HttpStatus.OK);
     }
 
-    @GetMapping("events/{teamId}")
+    @GetMapping("{teamId}/events")
     public ResponseEntity<List<EventDto>> getTeamEvents(@PathVariable Long teamId) {
         return new ResponseEntity<>(teamService.getTeam(teamId).getEvents().stream().map(event -> modelMapper.map(event, EventDto.class)).toList(), HttpStatus.OK);
     }
@@ -73,4 +79,5 @@ public class TeamController {
     public ResponseEntity<List<TeamDto>> getAllTeams() {
         return new ResponseEntity<>(teamService.getAllTeams().stream().map(team -> modelMapper.map(team, TeamDto.class)).toList(), HttpStatus.OK);
     }
+
 }

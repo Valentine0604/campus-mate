@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -24,25 +25,49 @@ public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
-    private final AuthenticationSuccessHandler authenticationSuccessHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)  // Wyłącz CSRF
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Włącz obsługę CORS
-                .headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))  // Obsługa H2
+        http.csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST ,"/api/auth/authenticate").permitAll()
                         .requestMatchers("/api/auth/register").permitAll()
-                        .requestMatchers("/api/auth/logout").permitAll() // Dodaj ścieżkę wylogowania// Dodaj ścieżkę wylogowania
+                        .requestMatchers("/api/auth/logout").permitAll()
                         .requestMatchers("/h2/**").permitAll()
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Dodaj zezwolenie na żądania OPTIONS
+                        .requestMatchers(HttpMethod.GET,"/api/user/{userId}").hasAnyRole("STUDENT","LECTURER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET,"api/user/role/{role}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "api/user").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "api/user/{userId}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/user/{userId}").hasAnyRole("ADMIN", "LECTURER", "STUDENT")
+                        .requestMatchers(HttpMethod.PUT, "/api/user/change-password/{userId}").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/user/grades/{userId}").hasAnyRole("ADMIN", "LECTURER", "STUDENT")
+                        .requestMatchers(HttpMethod.GET, "/api/user/events/{userId}").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/event").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/team/{teamId}").hasAnyRole("ADMIN", "LECTURER", "STUDENT")
+                        .requestMatchers(HttpMethod.POST, "/api/team").hasAnyRole("ADMIN", "LECTURER")
+                        .requestMatchers(HttpMethod.POST, "/api/team/{teamId}/addUser/{userId}").hasAnyRole("ADMIN", "LECTURER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/team/{teamId}/removeUser/{userId}").hasAnyRole("ADMIN", "LECTURER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/team/{teamId}").hasAnyRole("ADMIN", "LECTURER")
+                        .requestMatchers(HttpMethod.PATCH, "/api/team/{teamId}").hasAnyRole("ADMIN", "LECTURER")
+                        .requestMatchers(HttpMethod.GET, "/api/team/{teamId}/users").hasAnyRole("ADMIN", "LECTURER", "STUDENT")
+                        //.requestMatchers(HttpMethod.GET, "/api/team/{teamId}/grades").hasAnyRole("ADMIN", "LECTURER")
+                        .requestMatchers(HttpMethod.GET, "/api/team/{teamId}/events").hasAnyRole("ADMIN", "LECTURER", "STUDENT")
+                        .requestMatchers(HttpMethod.GET, "/api/team/{teamId}/posts").hasAnyRole("ADMIN", "LECTURER", "STUDENT")
+                        .requestMatchers(HttpMethod.GET, "/api/post/{postId}").hasAnyRole("ADMIN", "LECTURER")
+                        .requestMatchers(HttpMethod.POST, "/api/post").hasAnyRole("ADMIN", "LECTURER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/post/{postId}").hasAnyRole("ADMIN", "LECTURER")
+                        .requestMatchers(HttpMethod.DELETE, "api/post/{postId}").hasAnyRole("ADMIN", "LECTURER")
+                        .requestMatchers(HttpMethod.PATCH, "/api/post/{postId}").hasAnyRole("ADMIN", "LECTURER")
+                        .requestMatchers(HttpMethod.GET, "/api/post").hasAnyRole("ADMIN", "LECTURER", "STUDENT")
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .logout(logout -> logout
-                        .logoutUrl("/api/auth/logout") // Skonfiguruj ścieżkę wylogowania
+                        .logoutUrl("/api/auth/logout")
                         .clearAuthentication(true)
-                        .deleteCookies("jwt") // Usuń cookie JWT podczas wylogowania
+                        .deleteCookies("jwt")
                 )
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -4,6 +4,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.hibernate.Hibernate;
 import org.pollub.campusmate.utilities.security.Role;
 import org.pollub.campusmate.user.dto.ChangePasswordDto;
 import org.pollub.campusmate.event.entity.Event;
@@ -144,6 +145,10 @@ public class UserService {
         return null;
     }
 
+    public User getLoggedInUser(String email){
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFound("User with email " + email + " not found"));
+    }
 
 
 }
