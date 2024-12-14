@@ -15,8 +15,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import static org.pollub.campusmate.utilities.constants.Security.SECRET_KEY;
+
+
 @Service
-public class JwtService extends Security {
+public class JwtService {
 
     public String extractUsername(String jwtToken){
         return extractClaim(jwtToken, Claims::getSubject);
