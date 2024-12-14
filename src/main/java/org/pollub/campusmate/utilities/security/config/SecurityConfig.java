@@ -36,6 +36,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/register").permitAll()
                         .requestMatchers("/api/auth/logout").permitAll()
                         .requestMatchers("/h2/**").permitAll()
+                        .requestMatchers("/2fa/**").authenticated()
                         .requestMatchers(HttpMethod.GET,"/api/user/{userId}").hasAnyRole("STUDENT","LECTURER", "ADMIN")
                         .requestMatchers(HttpMethod.GET,"api/user/role/{role}").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "api/user").hasRole("ADMIN")

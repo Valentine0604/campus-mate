@@ -59,7 +59,19 @@ public class User implements UserDetails {
     @Column(name = "role_name")
     private Role role;
 
+    @Column(name = "is_first_password_changed", nullable = false)
     private boolean isFirstPasswordChanged;
+
+    @Column(name = "is_two_factor_enabled", nullable = false)
+    private boolean isTwoFactorEnabled;
+
+    @Column(name = "two_factor_secret", nullable = false)
+    private String twoFactorSecret;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "backup_codes", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "backup_code")
+    private List<String> backupCodes;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Grade> grades;
