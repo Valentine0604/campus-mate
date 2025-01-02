@@ -2,56 +2,65 @@ package org.pollub.campusmate.event.web;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.pollub.campusmate.event.dto.EventDto;
+import org.pollub.campusmate.event.dto.EventCreationDto;
+import org.pollub.campusmate.event.mapper.EventMapper;
+import org.pollub.campusmate.event.mapper.EventCreationMapper;
 import org.pollub.campusmate.event.service.EventService;
-import org.pollub.campusmate.event.entity.Event;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("api/event")
+@RequestMapping("/api/event")
 public class EventController {
 
-    private final ModelMapper modelMapper;
-    EventService eventService;
+    private final EventMapper eventMapper;
+    private final EventCreationMapper eventCreationMapper;
+    private final EventService eventService;
 
     @GetMapping("/{eventId}")
     public ResponseEntity<EventDto> getEvent(@PathVariable Long eventId) {
-        Event event = eventService.getEvent(eventId);
-        EventDto eventDTO = modelMapper.map(event, EventDto.class);
-        return new ResponseEntity<>(eventDTO, HttpStatus.OK);
+        var event = eventService.getEvent(eventId);
+        var eventDto = eventMapper.toDto(event);
+        return new ResponseEntity<>(eventDto, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<String> createEvent(@Valid @RequestBody Event event, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            StringBuilder errorMessage = new StringBuilder();
-            bindingResult.getAllErrors().forEach(error -> errorMessage.append(error.getDefaultMessage()).append("\n"));
-            return new ResponseEntity<>(errorMessage.toString(), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<String> createEvent(
+            @Valid @RequestBody EventCreationDto eventCreationDto,
+            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getAllErrors().stream()
+                    .map(error -> error.getDefaultMessage() + "\n")
+                    .collect(Collectors.joining());
+            return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
         }
+        var event = eventCreationMapper.toEntity(eventCreationDto);
         eventService.addEvent(event);
         return new ResponseEntity<>("Event created successfully", HttpStatus.CREATED);
     }
 
-    @PutMapping
-    public ResponseEntity<String> updateEvent(@PathVariable Long eventId, @Valid @RequestBody EventDto eventDTO, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            StringBuilder errorMessage = new StringBuilder();
-            bindingResult.getAllErrors().forEach(error -> errorMessage.append(error.getDefaultMessage()).append("\n"));
-            return new ResponseEntity<>(errorMessage.toString(), HttpStatus.BAD_REQUEST);
+    @PutMapping("/{eventId}")
+    public ResponseEntity<String> updateEvent(
+            @PathVariable Long eventId,
+            @Valid @RequestBody EventDto eventDto,
+            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getAllErrors().stream()
+                    .map(error -> error.getDefaultMessage() + "\n")
+                    .collect(Collectors.joining());
+            return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
         }
-
-        Event event = modelMapper.map(eventDTO, Event.class);
+        var event = eventMapper.toEntity(eventDto);
         eventService.updateEvent(eventId, event);
         return new ResponseEntity<>("Event updated successfully", HttpStatus.OK);
     }
-
 
     @DeleteMapping("/{eventId}")
     public ResponseEntity<String> deleteEvent(@PathVariable Long eventId) {
@@ -61,8 +70,9 @@ public class EventController {
 
     @GetMapping
     public ResponseEntity<List<EventDto>> getAllEvents() {
-        return new ResponseEntity<>(eventService.getAllEvents().stream().map(event -> modelMapper.map(event, EventDto.class)).toList(), HttpStatus.OK);
+        var events = eventService.getAllEvents().stream()
+                .map(eventMapper::toDto)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(events, HttpStatus.OK);
     }
-
-
 }

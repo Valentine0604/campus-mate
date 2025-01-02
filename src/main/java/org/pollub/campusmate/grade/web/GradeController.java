@@ -2,11 +2,11 @@ package org.pollub.campusmate.grade.web;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.pollub.campusmate.grade.dto.GradeCreationDto;
 import org.pollub.campusmate.grade.dto.GradeDto;
+import org.pollub.campusmate.grade.mapper.GradeCreationMapper;
+import org.pollub.campusmate.grade.mapper.GradeMapper;
 import org.pollub.campusmate.grade.service.GradeService;
-import org.pollub.campusmate.grade.entity.Grade;
 import org.pollub.campusmate.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,63 +14,78 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/grade")
 public class GradeController {
 
-    private final ModelMapper modelMapper;
-    GradeService gradeService;
-    UserService userService;
+    private final GradeMapper gradeMapper;
+    private final GradeCreationMapper gradeCreationMapper;
+    private final GradeService gradeService;
+    private final UserService userService;
 
     @GetMapping("/{gradeId}")
     public ResponseEntity<GradeDto> getGrade(@PathVariable Long gradeId) {
-        Grade grade = gradeService.getGrade(gradeId);
-        GradeDto gradeDTO = modelMapper.map(grade, GradeDto.class);
-        return new ResponseEntity<>(gradeDTO, HttpStatus.OK);
+        var grade = gradeService.getGrade(gradeId);
+        var gradeDto = gradeMapper.toDto(grade);
+        return new ResponseEntity<>(gradeDto, HttpStatus.OK);
     }
 
     @GetMapping("/subject/{subjectName}")
     public ResponseEntity<List<GradeDto>> getGradesBySubjectName(@PathVariable String subjectName) {
-        List<Grade> grades = gradeService.getGradesBySubjectName(subjectName);
-        List<GradeDto> gradeDTOs = grades.stream().map(grade -> modelMapper.map(grade, GradeDto.class)).toList();
-        return new ResponseEntity<>(gradeDTOs, HttpStatus.OK);
+        var grades = gradeService.getGradesBySubjectName(subjectName).stream()
+                .map(gradeMapper::toDto)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(grades, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<String> createGrade(@Valid @RequestBody GradeCreationDto gradeDTO, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            StringBuilder errorMessage = new StringBuilder();
-            bindingResult.getAllErrors().forEach(error -> errorMessage.append(error.getDefaultMessage()).append("\n"));
-            return new ResponseEntity<>(errorMessage.toString(), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<String> createGrade(
+            @Valid @RequestBody GradeCreationDto gradeCreationDto,
+            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getAllErrors().stream()
+                    .map(error -> error.getDefaultMessage() + "\n")
+                    .collect(Collectors.joining());
+            return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
         }
-        Grade grade = modelMapper.map(gradeDTO, Grade.class);
-        grade.setUser(userService.getUser(gradeDTO.getUserId()));
+
+        var grade = gradeCreationMapper.toEntity(gradeCreationDto);
+        grade.setUser(userService.getUser(gradeCreationDto.getUserId()));
         gradeService.addGrade(grade);
-        return new ResponseEntity<>("Grade added successfully",HttpStatus.CREATED);
+        return new ResponseEntity<>("Grade added successfully", HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{gradeId}")
     public ResponseEntity<String> deleteGrade(@PathVariable Long gradeId) {
         gradeService.deleteGrade(gradeId);
-        return new ResponseEntity<>("Grade deleted successfully",HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("Grade deleted successfully", HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping
-    public ResponseEntity<String> updateGrade(@RequestParam Long gradeId, @Valid @RequestBody GradeDto gradeDTO, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            StringBuilder errorMessage = new StringBuilder();
-            bindingResult.getAllErrors().forEach(error -> errorMessage.append(error.getDefaultMessage()).append("\n"));
-            return new ResponseEntity<>(errorMessage.toString(), HttpStatus.BAD_REQUEST);
+    @PutMapping("/{gradeId}")
+    public ResponseEntity<String> updateGrade(
+            @PathVariable Long gradeId,
+            @Valid @RequestBody GradeDto gradeDto,
+            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getAllErrors().stream()
+                    .map(error -> error.getDefaultMessage() + "\n")
+                    .collect(Collectors.joining());
+            return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
         }
-        Grade grade = modelMapper.map(gradeDTO, Grade.class);
+
+        var grade = gradeMapper.toEntity(gradeDto);
         gradeService.updateGrade(gradeId, grade);
-        return new ResponseEntity<>("Grade updated successfully",HttpStatus.OK);
+        return new ResponseEntity<>("Grade updated successfully", HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<List<GradeDto>> getAllGrades() {
-        return new ResponseEntity<>(gradeService.getAllGrades().stream().map(grade -> modelMapper.map(grade, GradeDto.class)).toList(), HttpStatus.OK);
+        var grades = gradeService.getAllGrades().stream()
+                .map(gradeMapper::toDto)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(grades, HttpStatus.OK);
     }
 }

@@ -40,7 +40,6 @@ public class EventService {
         Event foundEvent = eventRepository.findById(eventId).get();
         event.setEventId(foundEvent.getEventId());
         event.setTeam(foundEvent.getTeam());
-        event.setCalendar(foundEvent.getCalendar());
         eventRepository.save(event);
     }
 

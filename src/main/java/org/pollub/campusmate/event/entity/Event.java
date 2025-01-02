@@ -4,12 +4,12 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.pollub.campusmate.calendar.entity.Calendar;
 import org.pollub.campusmate.team.entity.Team;
 import org.pollub.campusmate.user.entity.User;
 import org.pollub.campusmate.utilities.validator.ValidDate;
 
 import java.time.LocalDate;
+import java.util.Calendar;
 
 @ValidDate
 @Entity
@@ -46,10 +46,6 @@ public class Event {
     @ManyToOne
     @JoinColumn(name = "team_id", referencedColumnName = "team_id", nullable = false)
     private Team team;
-
-    @ManyToOne
-    @JoinColumn(name = "calendar_id", referencedColumnName = "calendar_id", nullable = false)
-    private Calendar calendar;
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)

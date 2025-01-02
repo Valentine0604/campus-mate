@@ -1,8 +1,6 @@
 package org.pollub.campusmate.utilities.web;
 
-import org.pollub.campusmate.addressbook.exception.AddressBookNotFound;
 import org.pollub.campusmate.addressbookentry.exception.AddressBookEntryNotFound;
-import org.pollub.campusmate.calendar.exception.CalendarNotFound;
 import org.pollub.campusmate.event.exception.EventNotFound;
 import org.pollub.campusmate.grade.exception.GradeNotFound;
 import org.pollub.campusmate.post.exception.PostNotFound;
@@ -46,16 +44,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(EventNotFound.class)
     public ResponseEntity<String> handleEventNotFound(EventNotFound ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(CalendarNotFound.class)
-    public ResponseEntity<String> handleCalendarNotFound(CalendarNotFound ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(AddressBookNotFound.class)
-    public ResponseEntity<String> handleAddressBookNotFound(AddressBookNotFound ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 

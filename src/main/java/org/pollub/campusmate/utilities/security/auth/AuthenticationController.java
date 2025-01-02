@@ -1,24 +1,19 @@
 package org.pollub.campusmate.utilities.security.auth;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.pollub.campusmate.user.dto.ChangePasswordDto;
-import org.pollub.campusmate.user.dto.UserCreationDto;
+import org.pollub.campusmate.user.dto.UserDto;
 import org.pollub.campusmate.user.entity.User;
 import org.pollub.campusmate.user.exception.UserNotFound;
 import org.pollub.campusmate.user.repository.UserRepository;
-import org.pollub.campusmate.utilities.security.Role;
 import org.pollub.campusmate.utilities.service.EmailSenderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.NoSuchAlgorithmException;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -31,7 +26,7 @@ public class AuthenticationController {
     private final EmailSenderService emailSenderService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody UserCreationDto request, HttpServletResponse servletResponse) throws NoSuchAlgorithmException {
+    public ResponseEntity<AuthenticationResponse> register(@RequestBody UserDto request, HttpServletResponse servletResponse) {
         AuthenticationResponse authResponse = authenticationService.register(request, servletResponse);
         return ResponseEntity.ok(authResponse);
     }

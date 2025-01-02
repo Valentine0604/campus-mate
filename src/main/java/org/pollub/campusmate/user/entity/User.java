@@ -8,7 +8,6 @@ import lombok.*;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.pollub.campusmate.utilities.security.Role;
 import org.pollub.campusmate.addressbookentry.entity.AddressBookEntry;
-import org.pollub.campusmate.calendar.entity.Calendar;
 import org.pollub.campusmate.event.entity.Event;
 import org.pollub.campusmate.grade.entity.Grade;
 import org.pollub.campusmate.post.entity.Post;
@@ -87,9 +86,6 @@ public class User implements UserDetails {
     private List<Team> teams;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Calendar calendar;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private AddressBookEntry addressBookEntry;
 
     @OneToOne(fetch = FetchType.EAGER)
@@ -136,7 +132,6 @@ public class User implements UserDetails {
                 .append("role", role)
                 .append("isFirstPasswordChanged", isFirstPasswordChanged)
                 .append("password", password)
-                .append("calendars", calendar)
                 .toString();
     }
 }

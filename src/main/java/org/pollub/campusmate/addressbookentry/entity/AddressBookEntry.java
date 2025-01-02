@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.pollub.campusmate.addressbook.entity.AddressBook;
 import org.pollub.campusmate.user.entity.User;
 import org.pollub.campusmate.utilities.validator.ValidPhoneNumber;
 
@@ -41,10 +40,6 @@ public class AddressBookEntry {
     @Column(name = "notes", length = 200)
     @Size(message = "Notes cannot be longer than 200 characters", max = 200)
     private String notes;
-
-    @ManyToOne
-    @JoinColumn(name = "address_book_id", referencedColumnName = "address_book_id")
-    private AddressBook addressBook;
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")

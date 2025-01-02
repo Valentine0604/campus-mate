@@ -42,7 +42,6 @@ public class AddressBookEntryService {
         }
         AddressBookEntry foundAddressBookEntry = getAddressBookEntryById(addressBookEntryId);
         addressBookEntry.setEntryId(addressBookEntryId);
-        addressBookEntry.setAddressBook(foundAddressBookEntry.getAddressBook());
         addressBookEntryRepository.save(addressBookEntry);
     }
 

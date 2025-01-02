@@ -5,15 +5,11 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.pollub.campusmate.addressbookentry.entity.AddressBookEntry;
 import org.pollub.campusmate.addressbookentry.service.AddressBookEntryService;
-import org.pollub.campusmate.calendar.entity.Calendar;
-import org.pollub.campusmate.user.dto.UserCreationDto;
+import org.pollub.campusmate.user.dto.UserDto;
 import org.pollub.campusmate.user.entity.User;
 import org.pollub.campusmate.user.exception.UserNotFound;
 import org.pollub.campusmate.user.repository.UserRepository;
@@ -21,8 +17,6 @@ import org.pollub.campusmate.utilities.security.Role;
 import org.pollub.campusmate.utilities.security.config.JwtService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +34,8 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final EmailSenderService emailSenderService;
 
-    public AuthenticationResponse register(UserCreationDto request, HttpServletResponse response) throws NoSuchAlgorithmException {
+    public AuthenticationResponse register(UserDto request, HttpServletResponse response) {
+
         String rawPassword = generatePassword();
 
         System.out.println(rawPassword);
@@ -59,8 +54,6 @@ public class AuthenticationService {
                 .role(request.getRole())
                 .isFirstPasswordChanged(false)
                 .build();
-
-//        createdUser.setCalendar(new Calendar(createdUser.getFirstName() + " " + createdUser.getLastName() + "'s calendar", new ArrayList<>(),createdUser));
 
         if(createdUser.getRole().equals(Role.ROLE_LECTURER)){
             String contactName = createdUser.getFirstName() + " " + createdUser.getLastName();
@@ -84,6 +77,7 @@ public class AuthenticationService {
                         + "\n\nBest regards,\nCampusMate Team");
 
         return AuthenticationResponse.builder().token(jwtToken).build();
+
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request, HttpServletResponse response) {
@@ -154,7 +148,6 @@ public class AuthenticationService {
         user.setPassword(passwordEncoder.encode("Admin1_"));
         user.setRole(Role.valueOf("ROLE_ADMIN"));
         user.setFirstPasswordChanged(true);
-        user.setCalendar(new Calendar("Admin" + "'s calendar", new ArrayList<>(),user));
         userRepository.save(user);
     }
 }
