@@ -150,10 +150,6 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFound("User with email " + email + " not found"));
     }
 
-    public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFound("User with username " + username + " not found"));
-    }
 
 
 }

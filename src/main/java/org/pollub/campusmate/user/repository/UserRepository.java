@@ -23,6 +23,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByEmail(@NonNull @Email(message = "Email must be a valid email address") @Size(message = "Email cannot be longer than 100 characters ", max = 100) String email);
 
-    Optional<User> findByUsername(String username);
+
 }
 
