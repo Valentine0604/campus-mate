@@ -145,6 +145,8 @@ public class AuthenticationService {
     public void initializeUsers() {
         User user = new User();
         user.setEmail("admin@admin.pl");
+        user.setFirstName("admin");
+        user.setLastName("admin");
         user.setPassword(passwordEncoder.encode("Admin1_"));
         user.setRole(Role.valueOf("ROLE_ADMIN"));
         user.setFirstPasswordChanged(true);

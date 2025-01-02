@@ -49,15 +49,13 @@ public class PostController {
     public ResponseEntity<String> createPost(@RequestBody PostCreationDto postCreationDto) {
         var post = postCreationMapper.toEntity(postCreationDto);
 
-        // Pobranie informacji o użytkowniku z kontekstu bezpieczeństwa
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
-            // Zakładamy, że authentication.getName() zwraca e-mail użytkownika
-            var email = authentication.getName(); // email jako username
-            var currentUser = userService.getUserByEmail(email); // Pobierz użytkownika na podstawie e-maila
+            var email = authentication.getName();
+            var currentUser = userService.getUserByEmail(email);
 
             if (currentUser != null) {
-                post.setUser(currentUser); // Ustawienie użytkownika w poście
+                post.setUser(currentUser);
             } else {
                 return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
             }
@@ -80,9 +78,7 @@ public class PostController {
 
     @PatchMapping("/{postId}")
     public ResponseEntity<String> editPost(@PathVariable Long postId, @RequestBody PostCreationDto postCreationDto) {
-        Post postEntity = postCreationMapper.toEntity(postCreationDto);
-        PostCreationDto updatedPost = postCreationMapper.toDto(postEntity);
-        postService.editPost(postId, updatedPost);
+        postService.editPost(postId, postCreationDto);
         return new ResponseEntity<>("Post updated successfully", HttpStatus.OK);
     }
 
