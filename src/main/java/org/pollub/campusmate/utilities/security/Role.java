@@ -1,8 +1,8 @@
 package org.pollub.campusmate.utilities.security;
 
 public enum Role {
-    ADMIN,
-    STUDENT,
-    LECTURER
+    ROLE_ADMIN,
+    ROLE_STUDENT,
+    ROLE_LECTURER
 
 }

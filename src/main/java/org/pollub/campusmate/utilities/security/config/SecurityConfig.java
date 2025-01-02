@@ -32,9 +32,9 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST ,"/api/auth/authenticate").permitAll()
+                        .requestMatchers(HttpMethod.POST ,"/api/auth/login").permitAll()
                         .requestMatchers("/api/auth/register").permitAll()
-                        .requestMatchers("/api/auth/logout").permitAll()
+                        .requestMatchers("/api/auth/logout").hasAnyRole("STUDENT", "ADMIN", "LECTURER")
                         .requestMatchers("/h2/**").permitAll()
                         .requestMatchers("/2fa/**").authenticated()
                         .requestMatchers(HttpMethod.GET,"/api/user/{userId}").hasAnyRole("STUDENT","LECTURER", "ADMIN")

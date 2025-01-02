@@ -63,4 +63,6 @@ public class EventController {
     public ResponseEntity<List<EventDto>> getAllEvents() {
         return new ResponseEntity<>(eventService.getAllEvents().stream().map(event -> modelMapper.map(event, EventDto.class)).toList(), HttpStatus.OK);
     }
+
+
 }

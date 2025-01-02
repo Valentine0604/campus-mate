@@ -22,7 +22,7 @@ public class CalendarService {
     }
 
     public List<Calendar> getCalendarsByUser(Long userId) {
-        return calendarRepository.findByUserUserId(userId);
+        return calendarRepository.findCalendarByUserUserId(userId);
     }
 
     public Calendar createCalendar(Calendar calendar){

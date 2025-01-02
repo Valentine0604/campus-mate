@@ -16,5 +16,5 @@ public class GradeCreationDto {
     @ValidGrade
     private final String grade;
     private final String comment;
-    private final User user;
+    private final Long userId;
 }

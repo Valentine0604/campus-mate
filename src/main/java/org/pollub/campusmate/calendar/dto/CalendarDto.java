@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(force = true)
 public class CalendarDto {
 
+    private final Long calendarId;
     private final String calendarName;
 
 }

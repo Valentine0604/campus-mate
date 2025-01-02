@@ -14,7 +14,7 @@ public class Security {
             new User(
                     "admin@admin.com",
                     "admin",
-                    Collections.singleton(new SimpleGrantedAuthority(Role.ADMIN.name())
+                    Collections.singleton(new SimpleGrantedAuthority(Role.ROLE_ADMIN.name())
                     )
             ));
 

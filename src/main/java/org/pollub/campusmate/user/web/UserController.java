@@ -59,7 +59,7 @@ public class UserController {
         User user = modelMapper.map(userDTO, User.class);
         user.setCalendar(new Calendar(user.getFirstName() + " " + user.getLastName() + "'s calendar", new ArrayList<>(),user));
 
-        if(user.getRole().equals(Role.LECTURER)){
+        if(user.getRole().equals(Role.ROLE_LECTURER)){
             String contactName = user.getFirstName() + " " + user.getLastName();
             AddressBookEntry entry = new AddressBookEntry(contactName, user.getEmail());
             addressBookEntryService.saveAddressBookEntry(entry);

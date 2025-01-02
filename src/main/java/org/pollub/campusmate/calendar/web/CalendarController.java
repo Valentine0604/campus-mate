@@ -6,6 +6,7 @@ import org.pollub.campusmate.calendar.dto.CalendarCreationDto;
 import org.pollub.campusmate.calendar.dto.CalendarDto;
 import org.pollub.campusmate.calendar.service.CalendarService;
 import org.pollub.campusmate.calendar.entity.Calendar;
+import org.pollub.campusmate.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ import java.util.List;
 public class CalendarController {
 
     private final ModelMapper modelMapper;
+    private final UserService userService;
     CalendarService calendarService;
 
     @GetMapping("/{calendarId}")
@@ -36,7 +38,9 @@ public class CalendarController {
 
     @PostMapping
     public ResponseEntity<String> createCalendar(@RequestBody CalendarCreationDto calendarDTO) {
-        Calendar calendar = modelMapper.map(calendarDTO, Calendar.class);
+        Calendar calendar = Calendar.builder()
+                .calendarName(calendarDTO.getCalendarName())
+                .user(userService.getUser(calendarDTO.getUserId())).build();
         calendarService.createCalendar(calendar);
         return new ResponseEntity<>("Calendar created successfully",HttpStatus.CREATED);
     }
@@ -53,8 +57,6 @@ public class CalendarController {
         calendarService.updateCalendar(calendarId, calendar);
         return new ResponseEntity<>("Calendar updated successfully",HttpStatus.OK);
     }
-
-
 
     @GetMapping
     public ResponseEntity<List<CalendarDto>> getAllCalendars() {

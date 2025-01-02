@@ -7,6 +7,7 @@ import org.pollub.campusmate.event.exception.EventNotFound;
 import org.pollub.campusmate.event.repository.EventRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 @Service

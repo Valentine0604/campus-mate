@@ -11,6 +11,8 @@ import java.util.List;
 @Table(name = "calendar")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Calendar {
 
     @Id

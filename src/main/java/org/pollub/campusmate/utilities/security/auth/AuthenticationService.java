@@ -60,9 +60,9 @@ public class AuthenticationService {
                 .isFirstPasswordChanged(false)
                 .build();
 
-        createdUser.setCalendar(new Calendar(createdUser.getFirstName() + " " + createdUser.getLastName() + "'s calendar", new ArrayList<>(),createdUser));
+//        createdUser.setCalendar(new Calendar(createdUser.getFirstName() + " " + createdUser.getLastName() + "'s calendar", new ArrayList<>(),createdUser));
 
-        if(createdUser.getRole().equals(Role.LECTURER)){
+        if(createdUser.getRole().equals(Role.ROLE_LECTURER)){
             String contactName = createdUser.getFirstName() + " " + createdUser.getLastName();
             AddressBookEntry entry = new AddressBookEntry(contactName, createdUser.getEmail());
             addressBookEntryService.saveAddressBookEntry(entry);
@@ -152,8 +152,9 @@ public class AuthenticationService {
         User user = new User();
         user.setEmail("admin@admin.pl");
         user.setPassword(passwordEncoder.encode("Admin1_"));
-        user.setRole(Role.valueOf("ADMIN"));
+        user.setRole(Role.valueOf("ROLE_ADMIN"));
         user.setFirstPasswordChanged(true);
+        user.setCalendar(new Calendar("Admin" + "'s calendar", new ArrayList<>(),user));
         userRepository.save(user);
     }
 }

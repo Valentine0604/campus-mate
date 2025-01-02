@@ -7,6 +7,7 @@ import org.pollub.campusmate.grade.dto.GradeCreationDto;
 import org.pollub.campusmate.grade.dto.GradeDto;
 import org.pollub.campusmate.grade.service.GradeService;
 import org.pollub.campusmate.grade.entity.Grade;
+import org.pollub.campusmate.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -21,6 +22,7 @@ public class GradeController {
 
     private final ModelMapper modelMapper;
     GradeService gradeService;
+    UserService userService;
 
     @GetMapping("/{gradeId}")
     public ResponseEntity<GradeDto> getGrade(@PathVariable Long gradeId) {
@@ -44,6 +46,7 @@ public class GradeController {
             return new ResponseEntity<>(errorMessage.toString(), HttpStatus.BAD_REQUEST);
         }
         Grade grade = modelMapper.map(gradeDTO, Grade.class);
+        grade.setUser(userService.getUser(gradeDTO.getUserId()));
         gradeService.addGrade(grade);
         return new ResponseEntity<>("Grade added successfully",HttpStatus.CREATED);
     }

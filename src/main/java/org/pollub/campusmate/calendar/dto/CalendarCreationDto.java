@@ -11,5 +11,5 @@ import org.pollub.campusmate.user.entity.User;
 public class CalendarCreationDto {
 
     private final String calendarName;
-    private final User user;
+    private final Long userId;
 }
