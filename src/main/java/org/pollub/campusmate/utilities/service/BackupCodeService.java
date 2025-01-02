@@ -2,6 +2,7 @@ package org.pollub.campusmate.utilities.service;
 
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.pollub.campusmate.user.entity.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,14 @@ public class BackupCodeService {
         return backupCodes;
     }
 
+    public List<String> generateAndSaveBackupCodes(User user){
+        List<String> rawBackupCodes = generateBackupCodes();
+        List<String> hashedCodes = hashBackupCodes(rawBackupCodes);
+        user.setBackupCodes(hashedCodes);
+
+        return rawBackupCodes;
+    }
+
     public List<String> hashBackupCodes(List<String> backupCodes){
         List<String> hashedBackupCodes = new ArrayList<>();
 
@@ -51,7 +60,8 @@ public class BackupCodeService {
                 return true;
             }
         }
-
         return false;
     }
+
+
 }

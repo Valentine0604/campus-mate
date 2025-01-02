@@ -1,5 +1,6 @@
 package org.pollub.campusmate.team.web;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.pollub.campusmate.event.dto.EventDto;
@@ -22,16 +23,31 @@ public class TeamController {
     private final ModelMapper modelMapper;
     private final TeamService teamService;
 
+//    @GetMapping("/{teamId}")
+//    public ResponseEntity<TeamDto> getTeam(@PathVariable long teamId) {
+//        Team team = teamService.getTeam(teamId);
+//        TeamDto teamDTO = modelMapper.map(team, TeamDto.class);
+//        return new ResponseEntity<>(teamDTO, HttpStatus.OK);
+//    }
     @GetMapping("/{teamId}")
-    public ResponseEntity<TeamDto> getTeam(@PathVariable Long teamId) {
+    public ResponseEntity<TeamDto> getTeam(@PathVariable long teamId) {
         Team team = teamService.getTeam(teamId);
-        TeamDto teamDTO = modelMapper.map(team, TeamDto.class);
-        return new ResponseEntity<>(teamDTO, HttpStatus.OK);
+        TeamDto teamToDisplay = modelMapper.map(team, TeamDto.class);
+
+        return new ResponseEntity<>(teamToDisplay, HttpStatus.OK);
     }
+
+//    @PostMapping
+//    public ResponseEntity<String> createTeam(@RequestBody TeamDto teamDTO) {
+//        teamService.addTeam(modelMapper.map(teamDTO, Team.class));
+//        return new ResponseEntity<>("Team created successfully", HttpStatus.CREATED);
+//    }
 
     @PostMapping
     public ResponseEntity<String> createTeam(@RequestBody TeamDto teamDTO) {
-        teamService.addTeam(modelMapper.map(teamDTO, Team.class));
+        Team createdTeam = modelMapper.map(teamDTO, Team.class);
+        teamService.addTeam(createdTeam);
+
         return new ResponseEntity<>("Team created successfully", HttpStatus.CREATED);
     }
 

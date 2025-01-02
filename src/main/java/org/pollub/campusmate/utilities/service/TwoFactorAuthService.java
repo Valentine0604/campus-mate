@@ -35,4 +35,8 @@ public class TwoFactorAuthService {
         Totp totp = new Totp(secretKey);
         return totp.verify(code);
     }
+
+    public boolean isOTP(String input){
+        return input != null && input.matches("\\d{6}");
+    }
 }
