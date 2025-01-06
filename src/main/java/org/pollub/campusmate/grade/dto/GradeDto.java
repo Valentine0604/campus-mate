@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
 public class GradeDto {
+    private final Long gradeId;
     private final String subjectName;
     @ValidGrade
     private final String grade;

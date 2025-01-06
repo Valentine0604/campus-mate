@@ -11,6 +11,7 @@ public class GradeMapper {
         if(grade == null) return null;
 
         return new GradeDto(
+                grade.getGradeId(),
                 grade.getSubjectName(),
                 grade.getGrade(),
                 grade.getComment(),
@@ -22,7 +23,7 @@ public class GradeMapper {
         if(dto == null) return null;
 
         Grade grade = new Grade();
-
+        grade.setGradeId(dto.getGradeId());
         grade.setSubjectName(dto.getSubjectName());
         grade.setGrade(dto.getGrade());
         grade.setComment(dto.getComment());

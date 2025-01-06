@@ -19,6 +19,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.Collections;
 
+import static org.springframework.security.authorization.AuthenticatedAuthorizationManager.anonymous;
+
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
@@ -89,7 +91,7 @@ public class SecurityConfig {
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("*", "Content-Type", "Authorization")); // Zmień z Collections.singletonList na Arrays.asList
         configuration.setAllowCredentials(true);
-        configuration.setMaxAge(3600L); // Dodaj cache dla preflight requests
+        configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

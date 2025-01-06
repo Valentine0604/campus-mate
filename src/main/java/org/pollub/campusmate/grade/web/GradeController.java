@@ -1,5 +1,6 @@
 package org.pollub.campusmate.grade.web;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.pollub.campusmate.grade.dto.GradeCreationDto;
@@ -58,13 +59,14 @@ public class GradeController {
         return new ResponseEntity<>("Grade added successfully", HttpStatus.CREATED);
     }
 
+    @Transactional
     @DeleteMapping("/{gradeId}")
     public ResponseEntity<String> deleteGrade(@PathVariable Long gradeId) {
         gradeService.deleteGrade(gradeId);
-        return new ResponseEntity<>("Grade deleted successfully", HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("Grade deleted successfully", HttpStatus.OK);
     }
 
-    @PutMapping("/{gradeId}")
+    @PatchMapping("/{gradeId}")
     public ResponseEntity<String> updateGrade(
             @PathVariable Long gradeId,
             @Valid @RequestBody GradeDto gradeDto,
@@ -75,9 +77,7 @@ public class GradeController {
                     .collect(Collectors.joining());
             return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
         }
-
-        var grade = gradeMapper.toEntity(gradeDto);
-        gradeService.updateGrade(gradeId, grade);
+        gradeService.updateGrade(gradeId, gradeDto);
         return new ResponseEntity<>("Grade updated successfully", HttpStatus.OK);
     }
 

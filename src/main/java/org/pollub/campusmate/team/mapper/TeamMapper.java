@@ -12,6 +12,7 @@ public class TeamMapper {
 
 
         return new TeamDto(
+                team.getTeamId(),
                 team.getTeamName(),
                 team.getDescription()
         );
@@ -22,6 +23,7 @@ public class TeamMapper {
 
 
         Team team = new Team();
+        team.setTeamId(teamDto.getTeamId());
         team.setTeamName(teamDto.getTeamName());
         team.setDescription(teamDto.getDescription());
 

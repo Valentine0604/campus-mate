@@ -48,9 +48,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         Cookie[] cookies = request.getCookies();
 
         if (cookies == null) {
-            filterChain.doFilter(request, response);
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return ;
+            filterChain.doFilter(request, response);
+            return;
         }
 
         Optional<Cookie> jwtCookie = Arrays.stream(cookies)
@@ -58,8 +58,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 .findFirst();
 
         if (jwtCookie.isEmpty()) {
-            filterChain.doFilter(request, response);
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            filterChain.doFilter(request, response);
             return;
         }
 
