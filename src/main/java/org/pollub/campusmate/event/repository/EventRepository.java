@@ -11,6 +11,5 @@ import java.util.Collection;
 public interface EventRepository extends CrudRepository<Event, Long> {
 
 
-    Collection<? extends Event> findByUser(User user);
 
 }

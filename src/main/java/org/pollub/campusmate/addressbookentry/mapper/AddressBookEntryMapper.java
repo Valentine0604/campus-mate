@@ -12,6 +12,7 @@ public class AddressBookEntryMapper {
         if (addressBookEntry == null) return null;
 
         return new AddressBookEntryDto(
+                addressBookEntry.getEntryId(),
                 addressBookEntry.getContactName(),
                 addressBookEntry.getEmail(),
                 addressBookEntry.getPhoneNumber(),

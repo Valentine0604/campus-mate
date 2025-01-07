@@ -9,7 +9,10 @@ import org.pollub.campusmate.user.entity.User;
 import org.pollub.campusmate.utilities.validator.ValidDate;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.List;
 
 @ValidDate
 @Entity
@@ -47,7 +50,24 @@ public class Event {
     @JoinColumn(name = "team_id", referencedColumnName = "team_id", nullable = false)
     private Team team;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
-    private User user;
+    @ManyToMany
+    @JoinTable(name = "event_user", joinColumns = @JoinColumn(name = "event_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private List<User> users;
+
+    public void addUser(User user) {
+        if (users == null) {
+            users = new ArrayList<>();
+        }
+        if (!users.contains(user)) {
+            users.add(user);
+            user.getEvents().add(this);
+        }
+    }
+
+    public void removeUser(User user) {
+        if (users != null) {
+            users.remove(user);
+            user.getEvents().remove(this);
+        }
+    }
 }

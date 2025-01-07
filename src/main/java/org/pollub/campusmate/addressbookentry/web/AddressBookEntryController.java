@@ -32,10 +32,12 @@ public class AddressBookEntryController {
     }
 
     @GetMapping("/search/{contactName}")
-    public ResponseEntity<AddressBookEntryDto> getAddressBookEntryByContactName(@PathVariable String contactName) {
-        var addressBookEntry = addressBookEntryService.getAddressBookEntryByContactName(contactName);
-        var addressBookEntryDto = addressBookEntryMapper.toDto(addressBookEntry);
-        return new ResponseEntity<>(addressBookEntryDto, HttpStatus.OK);
+    public ResponseEntity<List<AddressBookEntryDto>> searchAddressBookEntries(@PathVariable String contactName) {
+        var entries = addressBookEntryService.searchAddressBookEntriesByContactName(contactName);
+        var entriesDto = entries.stream()
+                .map(addressBookEntryMapper::toDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(entriesDto);
     }
 
     @PostMapping
@@ -59,12 +61,11 @@ public class AddressBookEntryController {
         return new ResponseEntity<>("Entry deleted successfully", HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("/{addressBookEntryId}")
+    @PatchMapping("/{addressBookEntryId}")
     public ResponseEntity<String> updateAddressBookEntry(
             @PathVariable long addressBookEntryId,
-            @RequestBody AddressBookEntryCreationDto addressBookEntryCreationDto) {
-        var addressBookEntry = addressBookEntryCreationMapper.toEntity(addressBookEntryCreationDto);
-        addressBookEntryService.updateAddressBookEntry(addressBookEntryId, addressBookEntry);
+            @RequestBody AddressBookEntryDto addressBookEntryDto) {
+        addressBookEntryService.updateAddressBookEntry(addressBookEntryId, addressBookEntryDto);
         return new ResponseEntity<>("Entry updated successfully", HttpStatus.OK);
     }
 

@@ -82,4 +82,6 @@ public class UserController {
                 .toList();
         return new ResponseEntity<>(userDTOs, HttpStatus.OK);
     }
+
+    //TODO: implement get users by role
 }

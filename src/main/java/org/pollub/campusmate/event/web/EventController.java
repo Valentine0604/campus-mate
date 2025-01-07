@@ -41,12 +41,12 @@ public class EventController {
                     .collect(Collectors.joining());
             return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
         }
-        var event = eventCreationMapper.toEntity(eventCreationDto);
-        eventService.addEvent(event);
+
+        eventService.addEvent(eventCreationDto);
         return new ResponseEntity<>("Event created successfully", HttpStatus.CREATED);
     }
 
-    @PutMapping("/{eventId}")
+    @PatchMapping("/{eventId}")
     public ResponseEntity<String> updateEvent(
             @PathVariable Long eventId,
             @Valid @RequestBody EventDto eventDto,
@@ -57,8 +57,8 @@ public class EventController {
                     .collect(Collectors.joining());
             return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
         }
-        var event = eventMapper.toEntity(eventDto);
-        eventService.updateEvent(eventId, event);
+
+        eventService.updateEvent(eventId, eventDto);
         return new ResponseEntity<>("Event updated successfully", HttpStatus.OK);
     }
 
@@ -70,9 +70,12 @@ public class EventController {
 
     @GetMapping
     public ResponseEntity<List<EventDto>> getAllEvents() {
+        var tempEvents = eventService.getAllEvents();
         var events = eventService.getAllEvents().stream()
                 .map(eventMapper::toDto)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(events, HttpStatus.OK);
     }
+
+
 }

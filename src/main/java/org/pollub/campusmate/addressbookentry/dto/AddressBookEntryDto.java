@@ -10,6 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor(force = true)
 @Setter
 public class AddressBookEntryDto {
+    private Long entryId;
     private String contactName;
     private String email;
     private String phoneNumber;

@@ -75,13 +75,7 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFound("User not found"));
 
-        Set<Event> userEvents = new HashSet<>();
-
-        for (Team team : user.getTeams()) {
-            userEvents.addAll(team.getEvents());
-        }
-
-        userEvents.addAll(eventRepository.findByUser(user));
+        Set<Event> userEvents = new HashSet<>(user.getEvents());
 
         return new ArrayList<>(userEvents);
     }
