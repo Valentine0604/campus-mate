@@ -11,9 +11,8 @@ import org.pollub.campusmate.event.repository.EventRepository;
 import org.pollub.campusmate.team.entity.Team;
 import org.pollub.campusmate.user.entity.User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-
-import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -24,7 +23,6 @@ public class EventService {
     private final EventCreationMapper eventCreationMapper;
 
     public Event getEvent(long eventId) {
-
         return eventRepository.findById(eventId)
                 .orElseThrow(() -> new EventNotFound("Event with id " + eventId + " not found"));
     }
@@ -37,23 +35,23 @@ public class EventService {
                 newEvent.addUser(user);
             }
         }
-        Event savedEvent = eventRepository.save(newEvent);
-
-        return savedEvent;
+        return eventRepository.save(newEvent);
     }
 
-    public void deleteEvent(long eventId) {
-        if(!eventRepository.existsById(eventId)) {
-            throw new EventNotFound("Cannot execute delete operation. Event with id " + eventId + " not found");
-        }
-        eventRepository.deleteById(eventId);
+    @Transactional
+    public void deleteEvent(Long eventId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new EventNotFound("Cannot execute delete operation. Event with id " + eventId + " not found"));
+        event.clearUsers();
+        eventRepository.save(event);
+        eventRepository.delete(event);
     }
 
+    @Transactional
     public void updateEvent(Long eventId, @Valid EventDto event) {
-        if(!eventRepository.existsById(eventId)) {
-            throw new EventNotFound("Cannot execute update operation. Event with id " + eventId + " not found");
-        }
-        Event foundEvent = eventRepository.findById(eventId).get();
+        Event foundEvent = eventRepository.findById(eventId)
+                .orElseThrow(() -> new EventNotFound("Cannot execute update operation. Event with id " + eventId + " not found"));
+
         if (event.getEventName() != null) {
             foundEvent.setEventName(event.getEventName());
         }
@@ -70,14 +68,10 @@ public class EventService {
     }
 
     public List<Event> getAllEvents() {
-        List<Event> foundEvents = (List<Event>)eventRepository.findAll();
-
-        if(foundEvents.isEmpty()){
+        List<Event> foundEvents = (List<Event>) eventRepository.findAll();
+        if (foundEvents.isEmpty()) {
             throw new EventNotFound("No events found");
         }
-
         return foundEvents;
     }
-
-
 }

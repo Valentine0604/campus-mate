@@ -10,8 +10,6 @@ import org.pollub.campusmate.utilities.validator.ValidDate;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
 import java.util.List;
 
 @ValidDate
@@ -20,7 +18,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class Event {
-
     @Id
     @Column(name = "event_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,23 +48,35 @@ public class Event {
     private Team team;
 
     @ManyToMany
-    @JoinTable(name = "event_user", joinColumns = @JoinColumn(name = "event_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private List<User> users;
+    @JoinTable(
+            name = "user_event",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<User> users = new ArrayList<>();
 
     public void addUser(User user) {
-        if (users == null) {
-            users = new ArrayList<>();
-        }
         if (!users.contains(user)) {
             users.add(user);
-            user.getEvents().add(this);
+            if (!user.getEvents().contains(this)) {
+                user.getEvents().add(this);
+            }
         }
     }
 
     public void removeUser(User user) {
-        if (users != null) {
+        if (users.contains(user)) {
             users.remove(user);
-            user.getEvents().remove(this);
+            if (user.getEvents().contains(this)) {
+                user.getEvents().remove(this);
+            }
+        }
+    }
+
+    public void clearUsers() {
+        List<User> usersToRemove = new ArrayList<>(users);
+        for (User user : usersToRemove) {
+            removeUser(user);
         }
     }
 }

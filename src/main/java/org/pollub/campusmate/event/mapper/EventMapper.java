@@ -12,6 +12,7 @@ public class EventMapper {
 
 
         return new EventDto(
+                event.getEventId(),
                 event.getEventName(),
                 event.getEventDescription(),
                 event.getStartDate(),
