@@ -1,10 +1,13 @@
 package org.pollub.campusmate.grade.service;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.pollub.campusmate.grade.dto.GradeDto;
 import org.pollub.campusmate.grade.entity.Grade;
 import org.pollub.campusmate.grade.exception.GradeNotFound;
 import org.pollub.campusmate.grade.repository.GradeRepository;
+import org.pollub.campusmate.user.entity.User;
+import org.pollub.campusmate.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,6 +18,7 @@ import java.util.List;
 public class GradeService {
 
     private final GradeRepository gradeRepository;
+    private final UserRepository userRepository;
 
     public Grade getGrade(long gradeId) {
 
@@ -42,11 +46,19 @@ public class GradeService {
         return gradeRepository.save(grade);
     }
 
+    @Transactional
     public void deleteGrade(Long gradeId) {
-        if(!gradeRepository.existsById(gradeId)) {
-            throw new GradeNotFound("Cannot execute delete operation. Grade with id " + gradeId + " not found");
+        Grade grade = gradeRepository.findById(gradeId)
+                .orElseThrow(() -> new GradeNotFound("Cannot execute delete operation. Grade with id " + gradeId + " not found"));
+        try {
+            User user = grade.getUser();
+            user.getGrades().remove(grade);
+            userRepository.save(user);
+            gradeRepository.delete(grade);
+            gradeRepository.flush();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to delete grade with id " + gradeId, e);
         }
-        gradeRepository.deleteById(gradeId);
     }
 
     public void updateGrade(Long gradeId, GradeDto grade) {

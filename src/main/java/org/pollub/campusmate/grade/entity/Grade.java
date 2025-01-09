@@ -40,7 +40,7 @@ public class Grade {
     private LocalDate dateOfReceipt;
 
     @NonNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
 
