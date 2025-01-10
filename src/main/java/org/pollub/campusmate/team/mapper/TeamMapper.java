@@ -13,6 +13,7 @@ public class TeamMapper {
 
         return new TeamDto(
                 team.getTeamId(),
+                team.getCreatorId(),
                 team.getTeamName(),
                 team.getDescription()
         );

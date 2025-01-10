@@ -52,6 +52,9 @@ public class TeamController {
 
             createdTeam.setCreatorId(currentUser.getUserId());
         }
+        else {
+            return new ResponseEntity<>("User is not authenticated", HttpStatus.UNAUTHORIZED);
+        }
 
         teamService.addTeam(createdTeam);
         return new ResponseEntity<>("Team created successfully", HttpStatus.CREATED);
