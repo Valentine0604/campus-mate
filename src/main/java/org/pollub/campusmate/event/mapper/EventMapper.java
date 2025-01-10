@@ -26,6 +26,7 @@ public class EventMapper {
         }
 
         Event event = new Event();
+        event.setEventId(eventDto.getEventId());
         event.setEventName(eventDto.getEventName());
         event.setEventDescription(eventDto.getEventDescription());
         event.setStartDate(eventDto.getStartDate());

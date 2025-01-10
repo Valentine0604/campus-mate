@@ -11,11 +11,15 @@ import org.pollub.campusmate.team.service.TeamService;
 import org.pollub.campusmate.team.entity.Team;
 import org.pollub.campusmate.user.dto.UserDto;
 import org.pollub.campusmate.user.mapper.UserMapper;
+import org.pollub.campusmate.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
@@ -28,6 +32,7 @@ public class TeamController {
     private final PostCreationMapper postCreationMapper;
     private final EventMapper eventMapper;
     private final TeamService teamService;
+    private final UserService userService;
 
     @GetMapping("/{teamId}")
     public ResponseEntity<TeamDto> getTeam(@PathVariable long teamId) {
@@ -39,6 +44,15 @@ public class TeamController {
     @PostMapping
     public ResponseEntity<String> createTeam(@RequestBody TeamDto teamDTO) {
         Team createdTeam = teamMapper.toEntity(teamDTO);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication != null && authentication.isAuthenticated()) {
+            var email = authentication.getName();
+            var currentUser = userService.getUserByEmail(email);
+
+            createdTeam.setCreatorId(currentUser.getUserId());
+        }
+
         teamService.addTeam(createdTeam);
         return new ResponseEntity<>("Team created successfully", HttpStatus.CREATED);
     }
@@ -57,6 +71,11 @@ public class TeamController {
 
     @DeleteMapping("/{teamId}/removeUser/{userId}")
     public ResponseEntity<String> removeTeamUser(@PathVariable Long teamId, @PathVariable Long userId) {
+
+        if(Objects.equals(userId, teamService.getTeam(teamId).getCreatorId())) {
+            return new ResponseEntity<>("Cannot remove creator from team", HttpStatus.BAD_REQUEST);
+        }
+
         teamService.removeUserFromTeam(teamId, userId);
         return new ResponseEntity<>("User removed from team successfully", HttpStatus.NO_CONTENT);
     }

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(force = true)
 public class TeamDto {
     private final Long teamId;
+    private final Long creatorId;
     private final String teamName;
     private final String description;
 }

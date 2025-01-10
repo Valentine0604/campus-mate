@@ -16,6 +16,8 @@ import org.pollub.campusmate.utilities.security.Role;
 @NoArgsConstructor(force = true)
 public class UserDto {
 
+    private final Long userId;
+
     @Email
     @NonNull
     private final String email;

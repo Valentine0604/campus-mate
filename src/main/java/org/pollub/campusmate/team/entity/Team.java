@@ -29,6 +29,9 @@ public class Team {
     @Size(message = "Description cannot be longer than 200 characters", max = 200)
     private String description;
 
+    @Column(name = "creator_id")
+    private Long creatorId;
+
     @ManyToMany
     @JoinTable(name = "team_post", joinColumns = @JoinColumn(name = "team_id"), inverseJoinColumns = @JoinColumn(name = "post_id"))
     private List<Post> posts;

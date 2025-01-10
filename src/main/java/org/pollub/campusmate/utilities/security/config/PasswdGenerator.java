@@ -30,7 +30,7 @@ public class PasswdGenerator {
         CharacterRule specialCharRule = new CharacterRule(specialCharacterData, 1);
 
         // Ensure password length is between 6 and 12
-        int minPasswordLength = 6;
+        int minPasswordLength = 8;
         int maxPasswordLength = 12;
 
         // Generate a random length within the specified range
