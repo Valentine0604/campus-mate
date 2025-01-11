@@ -10,6 +10,7 @@ import org.pollub.campusmate.team.mapper.TeamMapper;
 import org.pollub.campusmate.team.service.TeamService;
 import org.pollub.campusmate.team.entity.Team;
 import org.pollub.campusmate.user.dto.UserDto;
+import org.pollub.campusmate.user.entity.User;
 import org.pollub.campusmate.user.mapper.UserMapper;
 import org.pollub.campusmate.user.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -41,29 +43,59 @@ public class TeamController {
         return new ResponseEntity<>(teamToDisplay, HttpStatus.OK);
     }
 
+//    @PostMapping
+//    public ResponseEntity<String> createTeam(@RequestBody TeamDto teamDTO) {
+//        Team createdTeam = teamMapper.toEntity(teamDTO);
+//
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if(authentication != null && authentication.isAuthenticated()) {
+//            var email = authentication.getName();
+//            var currentUser = userService.getUserByEmail(email);
+//
+//            createdTeam.setCreatorId(currentUser.getUserId());
+//        }
+//        else {
+//            return new ResponseEntity<>("User is not authenticated", HttpStatus.UNAUTHORIZED);
+//        }
+//
+//        teamService.addTeam(createdTeam);
+//        return new ResponseEntity<>("Team created successfully", HttpStatus.CREATED);
+//    }
+
     @PostMapping
     public ResponseEntity<String> createTeam(@RequestBody TeamDto teamDTO) {
-        Team createdTeam = teamMapper.toEntity(teamDTO);
+        var createdTeam = teamMapper.toEntity(teamDTO);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication != null && authentication.isAuthenticated()) {
             var email = authentication.getName();
             var currentUser = userService.getUserByEmail(email);
 
-            createdTeam.setCreatorId(currentUser.getUserId());
+            if(currentUser != null) {
+                createdTeam.setCreatorId(currentUser.getUserId());
+
+            }
+
+            teamService.addTeam(createdTeam);
+            teamService.addTeamUser(createdTeam.getTeamId(), currentUser.getUserId());
         }
         else {
             return new ResponseEntity<>("User is not authenticated", HttpStatus.UNAUTHORIZED);
         }
 
-        teamService.addTeam(createdTeam);
         return new ResponseEntity<>("Team created successfully", HttpStatus.CREATED);
     }
 
     @PostMapping("/{teamId}/addUser/{userId}")
     public ResponseEntity<String> addTeamUser(@PathVariable Long teamId, @PathVariable Long userId) {
-        teamService.addTeamUser(teamId, userId);
-        return new ResponseEntity<>("User added to team successfully", HttpStatus.CREATED);
+        Set<User> teamUsers = teamService.getTeam(teamId).getUsers();
+
+        if(!teamUsers.contains(userService.getUser(userId))) {
+            teamService.addTeamUser(teamId, userId);
+            return new ResponseEntity<>("User added to team successfully", HttpStatus.CREATED);
+        }
+
+        return new ResponseEntity<>("User has already been added to team", HttpStatus.BAD_REQUEST);
     }
 
     @DeleteMapping("/{teamId}")

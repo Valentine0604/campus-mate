@@ -7,7 +7,9 @@ import org.pollub.campusmate.event.entity.Event;
 import org.pollub.campusmate.post.entity.Post;
 import org.pollub.campusmate.user.entity.User;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "team")
@@ -38,7 +40,7 @@ public class Team {
 
     @ManyToMany
     @JoinTable(name = "team_user", joinColumns = @JoinColumn(name = "team_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private List<User> users;
+    private Set<User> users = new HashSet<>();
 
     @OneToMany
     @JoinColumn(name = "team_id", referencedColumnName = "team_id")
