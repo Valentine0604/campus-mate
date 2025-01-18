@@ -11,6 +11,7 @@ import org.pollub.campusmate.addressbookentry.entity.AddressBookEntry;
 import org.pollub.campusmate.addressbookentry.service.AddressBookEntryService;
 import org.pollub.campusmate.user.dto.UserDto;
 import org.pollub.campusmate.user.entity.User;
+import org.pollub.campusmate.user.exception.EmailAlreadyExistsException;
 import org.pollub.campusmate.user.exception.UserNotFound;
 import org.pollub.campusmate.user.repository.UserRepository;
 import org.pollub.campusmate.utilities.security.Role;
@@ -42,6 +43,10 @@ public class AuthenticationService {
 
         if (rawPassword == null || rawPassword.isEmpty()) {
             throw new IllegalArgumentException("Generated password cannot be null");
+        }
+
+        if(userRepository.existsByEmail(request.getEmail())) {
+            throw new EmailAlreadyExistsException("User with email " + request.getEmail() + " already exists");
         }
 
         String encodedPassword = passwordEncoder.encode(rawPassword);
@@ -116,8 +121,6 @@ public class AuthenticationService {
 
         user.setFirstPasswordChanged(true);
 
-
-
         userRepository.save(user);
     }
 
@@ -151,5 +154,14 @@ public class AuthenticationService {
         user.setRole(Role.valueOf("ROLE_ADMIN"));
         user.setFirstPasswordChanged(true);
         userRepository.save(user);
+
+        User userLecturer = new User();
+        userLecturer.setEmail("ewecia.s@gmail.com");
+        userLecturer.setFirstName("John");
+        userLecturer.setLastName("Paul");
+        userLecturer.setPassword(passwordEncoder.encode("Konwalia02%"));
+        userLecturer.setRole(Role.valueOf("ROLE_LECTURER"));
+        userLecturer.setFirstPasswordChanged(true);
+        userRepository.save(userLecturer);
     }
 }
