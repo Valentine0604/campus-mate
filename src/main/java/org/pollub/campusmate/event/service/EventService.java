@@ -29,12 +29,6 @@ public class EventService {
 
     public Event addEvent(EventCreationDto event) {
         Event newEvent = eventCreationMapper.toEntity(event);
-        Team team = newEvent.getTeam();
-        if (team != null && team.getUsers() != null) {
-            for (User user : team.getUsers()) {
-                newEvent.addUser(user);
-            }
-        }
         return eventRepository.save(newEvent);
     }
 
@@ -42,7 +36,6 @@ public class EventService {
     public void deleteEvent(Long eventId) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new EventNotFound("Cannot execute delete operation. Event with id " + eventId + " not found"));
-        event.clearUsers();
         eventRepository.save(event);
         eventRepository.delete(event);
     }

@@ -5,6 +5,8 @@ import org.pollub.campusmate.post.dto.PostCreationDto;
 import org.pollub.campusmate.post.entity.Post;
 import org.pollub.campusmate.post.exception.PostNotFound;
 import org.pollub.campusmate.post.repository.PostRepository;
+import org.pollub.campusmate.team.entity.Team;
+import org.pollub.campusmate.team.repository.TeamRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -13,6 +15,7 @@ import java.util.List;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final TeamRepository teamRepository;
 
     public Post getPost(Long postId){
 
@@ -50,6 +53,11 @@ public class PostService {
         if(!postRepository.existsById(postId)){
             throw new PostNotFound("Cannot execute delete operation. Post with id " + postId + " not found");
         }
+        for (Team team : postRepository.findById(postId).get().getTeams()) {
+            team.getPosts().remove(postRepository.findById(postId).get());
+            teamRepository.save(team);
+        }
+
         postRepository.deleteById(postId);
     }
 

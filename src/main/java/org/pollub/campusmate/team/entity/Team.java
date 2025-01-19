@@ -45,4 +45,10 @@ public class Team {
     @OneToMany
     @JoinColumn(name = "team_id", referencedColumnName = "team_id")
     private List<Event> events;
+
+    public void addPost(Post post) {
+        posts.add(post);
+    }
+
+
 }

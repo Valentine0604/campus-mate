@@ -17,4 +17,5 @@ public class GradeDto {
     private final String grade;
     private final String comment;
     private final LocalDate dateOfReceipt;
+
 }

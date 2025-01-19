@@ -2,6 +2,9 @@ package org.pollub.campusmate.user.service;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.pollub.campusmate.post.dto.PostDto;
+import org.pollub.campusmate.post.entity.Post;
+import org.pollub.campusmate.post.mapper.PostMapper;
 import org.pollub.campusmate.utilities.security.Role;
 import org.pollub.campusmate.event.entity.Event;
 import org.pollub.campusmate.team.entity.Team;
@@ -24,7 +27,7 @@ import java.util.Set;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final EventRepository eventRepository;
+    private final PostMapper postMapper;
 
 
     public User getUser(Long userId) {
@@ -75,7 +78,11 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFound("User not found"));
 
-        Set<Event> userEvents = new HashSet<>(user.getEvents());
+        Set<Event> userEvents = new HashSet<>();
+
+        for (Team team : user.getTeams()) {
+            userEvents.addAll(team.getEvents());
+        }
 
         return new ArrayList<>(userEvents);
     }
@@ -101,5 +108,16 @@ public class UserService {
     public User getLoggedInUser(String email){
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFound("User with email " + email + " not found"));
+    }
+
+    public List<PostDto> getUserPosts(Long userId) {
+        User user = getUser(userId);
+        List<PostDto> posts = new ArrayList<>();
+        for (Team team : user.getTeams()) {
+            for (Post post : team.getPosts()) {
+                posts.add(postMapper.toDto(post));
+            }
+        }
+        return posts;
     }
 }

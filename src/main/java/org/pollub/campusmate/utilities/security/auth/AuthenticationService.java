@@ -22,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import static org.pollub.campusmate.utilities.security.config.PasswdGenerator.generatePassword;
+
 import org.pollub.campusmate.utilities.service.EmailSenderService;
 
 @Service
@@ -45,7 +46,7 @@ public class AuthenticationService {
             throw new IllegalArgumentException("Generated password cannot be null");
         }
 
-        if(userRepository.existsByEmail(request.getEmail())) {
+        if (userRepository.existsByEmail(request.getEmail())) {
             throw new EmailAlreadyExistsException("User with email " + request.getEmail() + " already exists");
         }
 
@@ -60,9 +61,9 @@ public class AuthenticationService {
                 .isFirstPasswordChanged(false)
                 .build();
 
-        if(createdUser.getRole().equals(Role.ROLE_LECTURER)){
+        if (createdUser.getRole().equals(Role.ROLE_LECTURER)) {
             String contactName = createdUser.getFirstName() + " " + createdUser.getLastName();
-            AddressBookEntry entry = new AddressBookEntry(contactName, createdUser.getEmail());
+            AddressBookEntry entry = new AddressBookEntry(contactName, createdUser.getEmail(), createdUser);
             addressBookEntryService.saveAddressBookEntry(entry);
         }
 
@@ -96,7 +97,7 @@ public class AuthenticationService {
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UserNotFound("User with email " + request.getEmail() + " not found"));
 
-        if(!user.isFirstPasswordChanged()){
+        if (!user.isFirstPasswordChanged()) {
             throw new IllegalArgumentException("Generated password must be changed");
         }
         var extraClaims = new HashMap<String, Object>();
@@ -108,7 +109,7 @@ public class AuthenticationService {
         return AuthenticationResponse.builder().token(jwtToken).build();
     }
 
-    public void logout(HttpServletResponse response){
+    public void logout(HttpServletResponse response) {
         clearJwtCookie(response);
     }
 
@@ -124,7 +125,7 @@ public class AuthenticationService {
         userRepository.save(user);
     }
 
-    private void addJwtCookie(HttpServletResponse response, String token){
+    private void addJwtCookie(HttpServletResponse response, String token) {
         Cookie jwtCookie = new Cookie("jwt", token);
         jwtCookie.setHttpOnly(false);
         jwtCookie.setSecure(false);
@@ -134,12 +135,12 @@ public class AuthenticationService {
         response.addCookie(jwtCookie);
     }
 
-    private void clearJwtCookie(HttpServletResponse response){
+    private void clearJwtCookie(HttpServletResponse response) {
         Cookie jwtCookie = new Cookie("jwt", null);
         jwtCookie.setHttpOnly(false);
         jwtCookie.setSecure(true);
         jwtCookie.setPath("/");
-        jwtCookie.setMaxAge(0);
+        jwtCookie.setMaxAge(5);
 
         response.addCookie(jwtCookie);
     }
@@ -150,7 +151,7 @@ public class AuthenticationService {
         user.setEmail("admin@admin.pl");
         user.setFirstName("admin");
         user.setLastName("admin");
-        user.setPassword(passwordEncoder.encode("Admin1_"));
+        user.setPassword(passwordEncoder.encode("Admin1__"));
         user.setRole(Role.valueOf("ROLE_ADMIN"));
         user.setFirstPasswordChanged(true);
         userRepository.save(user);
@@ -159,9 +160,21 @@ public class AuthenticationService {
         userLecturer.setEmail("ewecia.s@gmail.com");
         userLecturer.setFirstName("John");
         userLecturer.setLastName("Paul");
-        userLecturer.setPassword(passwordEncoder.encode("Konwalia02%"));
+        userLecturer.setPassword(passwordEncoder.encode("Lecturer1__"));
         userLecturer.setRole(Role.valueOf("ROLE_LECTURER"));
         userLecturer.setFirstPasswordChanged(true);
         userRepository.save(userLecturer);
+        String contactName = userLecturer.getFirstName() + " " + userLecturer.getLastName();
+        AddressBookEntry entry = new AddressBookEntry(contactName, userLecturer.getEmail(), userLecturer);
+        addressBookEntryService.saveAddressBookEntry(entry);
+
+        User userStudent = new User();
+        userStudent.setEmail("user@user.pl");
+        userStudent.setFirstName("user");
+        userStudent.setLastName("user");
+        userStudent.setPassword(passwordEncoder.encode("User1__"));
+        userStudent.setRole(Role.valueOf("ROLE_STUDENT"));
+        userStudent.setFirstPasswordChanged(true);
+        userRepository.save(userStudent);
     }
 }

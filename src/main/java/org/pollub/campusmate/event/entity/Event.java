@@ -47,36 +47,4 @@ public class Event {
     @JoinColumn(name = "team_id", referencedColumnName = "team_id", nullable = false)
     private Team team;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_event",
-            joinColumns = @JoinColumn(name = "event_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private List<User> users = new ArrayList<>();
-
-    public void addUser(User user) {
-        if (!users.contains(user)) {
-            users.add(user);
-            if (!user.getEvents().contains(this)) {
-                user.getEvents().add(this);
-            }
-        }
-    }
-
-    public void removeUser(User user) {
-        if (users.contains(user)) {
-            users.remove(user);
-            if (user.getEvents().contains(this)) {
-                user.getEvents().remove(this);
-            }
-        }
-    }
-
-    public void clearUsers() {
-        List<User> usersToRemove = new ArrayList<>(users);
-        for (User user : usersToRemove) {
-            removeUser(user);
-        }
-    }
 }

@@ -1,6 +1,7 @@
 package org.pollub.campusmate.user.web;
 
 import lombok.AllArgsConstructor;
+import org.pollub.campusmate.post.dto.PostDto;
 import org.pollub.campusmate.utilities.security.Role;
 import org.pollub.campusmate.event.dto.EventDto;
 import org.pollub.campusmate.event.entity.Event;
@@ -83,5 +84,9 @@ public class UserController {
         return new ResponseEntity<>(userDTOs, HttpStatus.OK);
     }
 
-    //TODO: implement get users by role
+    @GetMapping("/{userId}/posts")
+    public ResponseEntity<List<PostDto>> getUserPosts(@PathVariable Long userId) {
+        List<PostDto> postsDto = userService.getUserPosts(userId);
+        return new ResponseEntity<>(postsDto, HttpStatus.OK);
+    }
 }

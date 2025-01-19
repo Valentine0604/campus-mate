@@ -12,5 +12,5 @@ import java.util.List;
 public class PostCreationDto {
     private final String postTitle;
     private final String postContent;
-    private final List<Team> teams;
+    private final List<Long> teams;
 }

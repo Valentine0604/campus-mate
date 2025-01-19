@@ -44,7 +44,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/change-password/{userId}")
-    public ResponseEntity<String> changePassword(@PathVariable long userId, @Valid @RequestBody ChangePasswordDto request, BindingResult bindingResult) {
+    public ResponseEntity<String> changePassword(@PathVariable Long userId, @Valid @RequestBody ChangePasswordDto request, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             StringBuilder errorMessage = new StringBuilder();
             bindingResult.getAllErrors().forEach(error -> errorMessage.append(error.getDefaultMessage()).append("\n"));

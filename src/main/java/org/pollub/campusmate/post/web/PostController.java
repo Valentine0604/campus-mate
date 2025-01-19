@@ -78,9 +78,7 @@ public class PostController {
 
     @PatchMapping("/{postId}")
     public ResponseEntity<String> editPost(@PathVariable Long postId, @RequestBody PostCreationDto postCreationDto) {
-        Post postEntity = postCreationMapper.toEntity(postCreationDto);
-        PostCreationDto updatedPost = postCreationMapper.toDto(postEntity);
-        postService.editPost(postId, updatedPost);
+        postService.editPost(postId, postCreationDto);
         return new ResponseEntity<>("Post updated successfully", HttpStatus.OK);
     }
 

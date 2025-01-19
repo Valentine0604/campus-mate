@@ -16,4 +16,5 @@ public class AddressBookEntryDto {
     private String phoneNumber;
     private String classNumber;
     private String notes;
+    private Long userId;
 }
