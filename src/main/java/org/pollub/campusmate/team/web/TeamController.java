@@ -4,8 +4,11 @@ import lombok.AllArgsConstructor;
 import org.pollub.campusmate.event.dto.EventDto;
 import org.pollub.campusmate.event.mapper.EventMapper;
 import org.pollub.campusmate.post.dto.PostCreationDto;
+import org.pollub.campusmate.post.dto.PostDto;
 import org.pollub.campusmate.post.mapper.PostCreationMapper;
+import org.pollub.campusmate.post.mapper.PostMapper;
 import org.pollub.campusmate.team.dto.TeamDto;
+import org.pollub.campusmate.team.dto.UserIdsRequest;
 import org.pollub.campusmate.team.mapper.TeamMapper;
 import org.pollub.campusmate.team.service.TeamService;
 import org.pollub.campusmate.team.entity.Team;
@@ -19,6 +22,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -31,7 +35,7 @@ public class TeamController {
 
     private final TeamMapper teamMapper;
     private final UserMapper userMapper;
-    private final PostCreationMapper postCreationMapper;
+    private final PostMapper postMapper;
     private final EventMapper eventMapper;
     private final TeamService teamService;
     private final UserService userService;
@@ -73,7 +77,6 @@ public class TeamController {
 
             if(currentUser != null) {
                 createdTeam.setCreatorId(currentUser.getUserId());
-
             }
 
             teamService.addTeam(createdTeam);
@@ -86,16 +89,18 @@ public class TeamController {
         return new ResponseEntity<>("Team created successfully", HttpStatus.CREATED);
     }
 
-    @PostMapping("/{teamId}/addUser/{userId}")
-    public ResponseEntity<String> addTeamUser(@PathVariable Long teamId, @PathVariable Long userId) {
+    @PostMapping("/{teamId}/addUsers")
+    public ResponseEntity<String> addTeamUser(@PathVariable Long teamId, @RequestBody UserIdsRequest request) {
         Set<User> teamUsers = teamService.getTeam(teamId).getUsers();
 
-        if(!teamUsers.contains(userService.getUser(userId))) {
-            teamService.addTeamUser(teamId, userId);
-            return new ResponseEntity<>("User added to team successfully", HttpStatus.CREATED);
+        for (Long userId : request.getUserIds()) {
+            if(!teamUsers.contains(userService.getUser(userId))) {
+                teamService.addTeamUser(teamId, userId);
+            } else {
+                return new ResponseEntity<>("One of the users has already been added to team", HttpStatus.BAD_REQUEST);
+            }
         }
-
-        return new ResponseEntity<>("User has already been added to team", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("User added to team successfully", HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{teamId}")
@@ -131,9 +136,9 @@ public class TeamController {
     }
 
     @GetMapping("/{teamId}/posts")
-    public ResponseEntity<List<PostCreationDto>> getTeamPosts(@PathVariable Long teamId) {
-        List<PostCreationDto> postDtos = teamService.getTeam(teamId).getPosts().stream()
-                .map(postCreationMapper::toDto)
+    public ResponseEntity<List<PostDto>> getTeamPosts(@PathVariable Long teamId) {
+        List<PostDto> postDtos = teamService.getTeam(teamId).getPosts().stream()
+                .map(postMapper::toDto)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(postDtos, HttpStatus.OK);
     }
@@ -149,6 +154,14 @@ public class TeamController {
     @GetMapping
     public ResponseEntity<List<TeamDto>> getAllTeams() {
         List<TeamDto> teams = teamService.getAllTeams().stream()
+                .map(teamMapper::toDto)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(teams, HttpStatus.OK);
+    }
+
+    @GetMapping("/{creatorId}/teams")
+    public ResponseEntity<List<TeamDto>> getTeamsByCreatorId(@PathVariable Long creatorId) {
+        List<TeamDto> teams = teamService.getTeamsByCreatorId(creatorId).stream()
                 .map(teamMapper::toDto)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(teams, HttpStatus.OK);

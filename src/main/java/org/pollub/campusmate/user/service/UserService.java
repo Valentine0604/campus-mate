@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import org.pollub.campusmate.post.dto.PostDto;
 import org.pollub.campusmate.post.entity.Post;
 import org.pollub.campusmate.post.mapper.PostMapper;
+import org.pollub.campusmate.team.dto.TeamDto;
+import org.pollub.campusmate.team.mapper.TeamMapper;
 import org.pollub.campusmate.utilities.security.Role;
 import org.pollub.campusmate.event.entity.Event;
 import org.pollub.campusmate.team.entity.Team;
@@ -28,6 +30,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PostMapper postMapper;
+    private final TeamMapper teamMapper;
 
 
     public User getUser(Long userId) {

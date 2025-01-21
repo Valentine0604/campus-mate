@@ -103,6 +103,7 @@ public class AuthenticationService {
         var extraClaims = new HashMap<String, Object>();
         extraClaims.put("role", user.getRole());
         extraClaims.put("userId", user.getUserId());
+        extraClaims.put("isFirstPasswordChanged", user.isFirstPasswordChanged());
         var jwtToken = jwtService.generateToken(extraClaims, user);
         addJwtCookie(response, jwtToken);
 
@@ -158,8 +159,8 @@ public class AuthenticationService {
 
         User userLecturer = new User();
         userLecturer.setEmail("ewecia.s@gmail.com");
-        userLecturer.setFirstName("John");
-        userLecturer.setLastName("Paul");
+        userLecturer.setFirstName("lecturer");
+        userLecturer.setLastName("lecturer");
         userLecturer.setPassword(passwordEncoder.encode("Lecturer1__"));
         userLecturer.setRole(Role.valueOf("ROLE_LECTURER"));
         userLecturer.setFirstPasswordChanged(true);
@@ -172,7 +173,7 @@ public class AuthenticationService {
         userStudent.setEmail("user@user.pl");
         userStudent.setFirstName("user");
         userStudent.setLastName("user");
-        userStudent.setPassword(passwordEncoder.encode("User1__"));
+        userStudent.setPassword(passwordEncoder.encode("User1___"));
         userStudent.setRole(Role.valueOf("ROLE_STUDENT"));
         userStudent.setFirstPasswordChanged(true);
         userRepository.save(userStudent);

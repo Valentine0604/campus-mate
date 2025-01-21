@@ -9,7 +9,10 @@ import org.pollub.campusmate.utilities.validator.ValidPhoneNumber;
 
 @Entity
 @Table(name = "address_book_entry")
-@Data
+@Getter
+@Setter
+@ToString(exclude = "user")
+@EqualsAndHashCode(exclude = "user")
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class AddressBookEntry {

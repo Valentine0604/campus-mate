@@ -24,10 +24,11 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 @Builder
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(exclude = "addressBookEntry")
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 public class User implements UserDetails {
 
     @Id

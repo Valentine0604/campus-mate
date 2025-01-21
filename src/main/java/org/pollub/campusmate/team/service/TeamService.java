@@ -10,6 +10,7 @@ import org.pollub.campusmate.user.exception.UserNotFound;
 import org.pollub.campusmate.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,7 +37,11 @@ public class TeamService {
         if(!teamRepository.existsById(teamId)){
             throw new TeamNotFound("Cannot execute delete operation. Team with id " + teamId + " not found");
         }
-
+        Team team = teamRepository.findById(teamId).get();
+        team.getUsers().clear();
+        team.getPosts().clear();
+        team.getEvents().clear();
+        teamRepository.save(team);
         teamRepository.deleteById(teamId);
     }
 
@@ -54,6 +59,7 @@ public class TeamService {
 
     public List<Team> getAllTeams(){
         List<Team> foundTeams = (List<Team>) teamRepository.findAll();
+
         if (foundTeams.isEmpty()) {
             throw new TeamNotFound("Teams not found");
         }
@@ -74,6 +80,7 @@ public class TeamService {
 
         foundTeam.getUsers().add(foundUser);
         teamRepository.save(foundTeam);
+
     }
 
     public void removeUserFromTeam(Long teamId, Long userId) {
@@ -87,19 +94,8 @@ public class TeamService {
         foundTeam.getUsers().remove(foundUser);
         teamRepository.save(foundTeam);
     }
-    //todo
-//
-//    public List<Grade> getMembersGrades(Long teamId, String subjectName) {
-//
-//        if(!teamRepository.existsById(teamId)){
-//            throw new TeamNotFound("Team with id " + teamId + " not found");
-//        }
-//        Team foundTeam = teamRepository.findById(teamId)
-//                .orElseThrow(() -> new TeamNotFound("Team with id " + teamId + " not found"));
-//
-//        return foundTeam.getUsers().stream()
-//                .flatMap(user -> user.getGrades().stream())
-//                .filter(grade -> grade.getSubjectName().equals(subjectName))
-//                .collect(Collectors.toList());
-//    }
+
+    public Collection<Team> getTeamsByCreatorId(Long creatorId) {
+        return teamRepository.findAllByCreatorId(creatorId);
+    }
 }
