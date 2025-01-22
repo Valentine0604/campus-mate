@@ -16,7 +16,8 @@ public class UserMapper {
                 user.getEmail(),
                 user.getFirstName(),
                 user.getLastName(),
-                user.getRole()
+                user.getRole(),
+                user.getGroup()
         );
     }
 
@@ -30,6 +31,7 @@ public class UserMapper {
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());
         user.setRole(userDto.getRole());
+        user.setGroup(userDto.getGroup());
 
         return user;
     }

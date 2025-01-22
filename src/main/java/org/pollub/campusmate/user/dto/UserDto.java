@@ -31,4 +31,6 @@ public class UserDto {
     @NonNull
     @Enumerated(EnumType.STRING)
     private final Role role;
+
+    private final String group;
 }

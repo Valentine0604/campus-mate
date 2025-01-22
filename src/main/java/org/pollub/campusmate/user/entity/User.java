@@ -62,6 +62,9 @@ public class User implements UserDetails {
     @Column(name = "is_first_password_changed", nullable = false)
     private boolean isFirstPasswordChanged;
 
+    @Column(name = "groups")
+    private String group;
+
 //    @Column(name = "is_two_factor_enabled", nullable = false)
 //    private boolean isTwoFactorEnabled;
 //

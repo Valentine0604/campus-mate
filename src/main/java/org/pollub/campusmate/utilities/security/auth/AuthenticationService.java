@@ -58,6 +58,7 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .password(encodedPassword)
                 .role(request.getRole())
+                .group(request.getGroup())
                 .isFirstPasswordChanged(false)
                 .build();
 
