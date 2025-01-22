@@ -14,7 +14,8 @@ public class GradeCreationMapper {
                 grade.getSubjectName(),
                 grade.getGrade(),
                 grade.getComment(),
-                grade.getUser().getUserId()
+                grade.getUser().getUserId(),
+                grade.getCreatorId()
         );
     }
 
@@ -26,6 +27,7 @@ public class GradeCreationMapper {
         grade.setGrade(dto.getGrade());
         grade.setComment(dto.getComment());
         grade.setSubjectName(dto.getSubjectName());
+        grade.setCreatorId(dto.getCreatorId());
 
         return grade;
     }

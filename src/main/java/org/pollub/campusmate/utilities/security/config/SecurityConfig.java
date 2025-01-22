@@ -48,6 +48,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, "/api/user/{userId}").hasAnyRole("ADMIN", "LECTURER", "STUDENT")
                         .requestMatchers(HttpMethod.PUT, "/api/user/change-password/{userId}").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/user/grades/{userId}").hasAnyRole("ADMIN", "LECTURER", "STUDENT")
+                        .requestMatchers(HttpMethod.GET, "/api/user/{userId}/teams").hasAnyRole("ADMIN", "LECTURER", "STUDENT")
                         .requestMatchers(HttpMethod.GET, "/api/user/events/{userId}").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/event").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/team/{teamId}").hasAnyRole("ADMIN", "LECTURER", "STUDENT")

@@ -17,6 +17,7 @@ import org.pollub.campusmate.user.entity.User;
 import org.pollub.campusmate.user.exception.UserNotFound;
 import org.pollub.campusmate.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.pollub.campusmate.team.exception.TeamNotFound;
 
 
 import java.util.ArrayList;
@@ -122,5 +123,17 @@ public class UserService {
             }
         }
         return posts;
+    }
+
+    public List<TeamDto> getUserTeams(Long userId) {
+        User user = getUser(userId);
+        List<TeamDto> teams = new ArrayList<>();
+        if (user.getTeams().isEmpty()) {
+            throw new TeamNotFound("Teams not found");
+        }
+        for (Team team : user.getTeams()) {
+            teams.add(teamMapper.toDto(team));
+        }
+        return teams;
     }
 }

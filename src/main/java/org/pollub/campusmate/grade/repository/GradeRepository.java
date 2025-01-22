@@ -9,7 +9,9 @@ import java.util.Collection;
 @Repository
 public interface GradeRepository extends JpaRepository<Grade, Long> {
 
-    Collection<? extends Grade> findByUserUserId(Long studentId);
+    Collection<Grade> findByUserUserId(Long studentId);
 
     Collection<? extends Grade> findBySubjectName(String subjectName);
+
+    Collection<Grade> findAllByCreatorId(Long creatorId);
 }

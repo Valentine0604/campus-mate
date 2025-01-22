@@ -41,6 +41,7 @@ public class TeamService {
         team.getUsers().clear();
         team.getPosts().clear();
         team.getEvents().clear();
+        team.setCreatorId(null);
         teamRepository.save(team);
         teamRepository.deleteById(teamId);
     }
