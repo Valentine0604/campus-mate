@@ -4,7 +4,6 @@ import org.pollub.campusmate.addressbookentry.exception.AddressBookEntryNotFound
 import org.pollub.campusmate.event.exception.EventNotFound;
 import org.pollub.campusmate.grade.exception.GradeNotFound;
 import org.pollub.campusmate.post.exception.PostNotFound;
-import org.pollub.campusmate.schedule.exception.ScheduleNotFound;
 import org.pollub.campusmate.team.exception.TeamNotFound;
 import org.pollub.campusmate.user.exception.EmailAlreadyExistsException;
 import org.pollub.campusmate.user.exception.PasswordDoesNotMatch;
@@ -29,11 +28,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(PostNotFound.class)
     public ResponseEntity<String> handlePostNotFound(PostNotFound ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(ScheduleNotFound.class)
-    public ResponseEntity<String> handleScheduleNotFound(ScheduleNotFound ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 

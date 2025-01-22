@@ -158,7 +158,7 @@ public class AuthenticationService {
         userRepository.save(user);
 
         User userLecturer = new User();
-        userLecturer.setEmail("ewecia.s@gmail.com");
+        userLecturer.setEmail("john@paul.com");
         userLecturer.setFirstName("lecturer");
         userLecturer.setLastName("lecturer");
         userLecturer.setPassword(passwordEncoder.encode("Lecturer1__"));

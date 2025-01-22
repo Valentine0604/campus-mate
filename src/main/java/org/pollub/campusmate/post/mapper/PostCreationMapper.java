@@ -44,6 +44,4 @@ public class PostCreationMapper {
 
         return post;
     }
-
-
 }

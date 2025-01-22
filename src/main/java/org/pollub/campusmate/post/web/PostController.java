@@ -63,7 +63,6 @@ public class PostController {
             return new ResponseEntity<>("User is not authenticated", HttpStatus.UNAUTHORIZED);
         }
 
-        // Dodanie posta do bazy
         postService.addPost(post);
         return new ResponseEntity<>("Post created successfully", HttpStatus.CREATED);
     }
@@ -76,7 +75,7 @@ public class PostController {
         return new ResponseEntity<>("Post deleted successfully", HttpStatus.NO_CONTENT);
     }
 
-    @PatchMapping("/{postId}")
+    @PutMapping("/{postId}")
     public ResponseEntity<String> editPost(@PathVariable Long postId, @RequestBody PostCreationDto postCreationDto) {
         postService.editPost(postId, postCreationDto);
         return new ResponseEntity<>("Post updated successfully", HttpStatus.OK);

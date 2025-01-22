@@ -35,6 +35,7 @@ public class SecurityConfig {
                 .headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST ,"/api/auth/login").permitAll()
+                        .requestMatchers("/api/schedule/**").permitAll()
                         .requestMatchers("/api/auth/register").permitAll()
                         .requestMatchers("/api/auth/logout").hasAnyRole("STUDENT", "ADMIN", "LECTURER")
                         .requestMatchers("/h2/**").permitAll()
