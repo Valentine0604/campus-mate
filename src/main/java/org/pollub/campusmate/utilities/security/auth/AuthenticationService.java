@@ -40,8 +40,6 @@ public class AuthenticationService {
 
         String rawPassword = generatePassword();
 
-        System.out.println(rawPassword);
-
         if (rawPassword == null || rawPassword.isEmpty()) {
             throw new IllegalArgumentException("Generated password cannot be null");
         }
@@ -105,6 +103,7 @@ public class AuthenticationService {
         extraClaims.put("role", user.getRole());
         extraClaims.put("userId", user.getUserId());
         extraClaims.put("isFirstPasswordChanged", user.isFirstPasswordChanged());
+        extraClaims.put("group", user.getGroup());
         var jwtToken = jwtService.generateToken(extraClaims, user);
         addJwtCookie(response, jwtToken);
 
