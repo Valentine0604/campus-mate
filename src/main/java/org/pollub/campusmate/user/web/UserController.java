@@ -58,15 +58,6 @@ public class UserController {
         return new ResponseEntity<>("User updated successfully", HttpStatus.OK);
     }
 
-    @GetMapping("/grades/{userId}")
-    public ResponseEntity<List<GradeDto>> getGradesByUserId(@PathVariable Long userId) {
-        List<Grade> grades = userService.getUser(userId).getGrades();
-        List<GradeDto> gradeDTOs = grades.stream()
-                .map(gradeMapper::toDto)
-                .toList();
-        return new ResponseEntity<>(gradeDTOs, HttpStatus.OK);
-    }
-
     @GetMapping("/events/{userId}")
     public ResponseEntity<List<EventDto>> getEventsByUserId(@PathVariable Long userId) {
         List<Event> events = userService.findEventsForUser(userId);
@@ -83,6 +74,12 @@ public class UserController {
                 .map(userMapper::toDto)
                 .toList();
         return new ResponseEntity<>(userDTOs, HttpStatus.OK);
+    }
+
+    @GetMapping("/{userId}/teams")
+    public ResponseEntity<List<TeamDto>> getUserTeams(@PathVariable Long userId) {
+        List<TeamDto> teamsDto = userService.getUserTeams(userId);
+        return new ResponseEntity<>(teamsDto, HttpStatus.OK);
     }
 
     @GetMapping("/{userId}/posts")

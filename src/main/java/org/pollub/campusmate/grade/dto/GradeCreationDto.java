@@ -17,4 +17,5 @@ public class GradeCreationDto {
     private final String grade;
     private final String comment;
     private final Long userId;
+    private final Long creatorId;
 }

@@ -48,7 +48,6 @@ public class PostController {
     @Transactional
     public ResponseEntity<String> createPost(@RequestBody PostCreationDto postCreationDto) {
         var post = postCreationMapper.toEntity(postCreationDto);
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
             var email = authentication.getName();
@@ -63,6 +62,7 @@ public class PostController {
             return new ResponseEntity<>("User is not authenticated", HttpStatus.UNAUTHORIZED);
         }
 
+        // Dodanie posta do bazy
         postService.addPost(post);
         return new ResponseEntity<>("Post created successfully", HttpStatus.CREATED);
     }
@@ -75,7 +75,7 @@ public class PostController {
         return new ResponseEntity<>("Post deleted successfully", HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("/{postId}")
+    @PatchMapping("/{postId}")
     public ResponseEntity<String> editPost(@PathVariable Long postId, @RequestBody PostCreationDto postCreationDto) {
         postService.editPost(postId, postCreationDto);
         return new ResponseEntity<>("Post updated successfully", HttpStatus.OK);

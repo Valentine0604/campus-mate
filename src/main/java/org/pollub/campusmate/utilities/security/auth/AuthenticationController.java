@@ -26,9 +26,9 @@ public class AuthenticationController {
     private final EmailSenderService emailSenderService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody UserDto request, HttpServletResponse servletResponse) {
-        AuthenticationResponse authResponse = authenticationService.register(request, servletResponse);
-        return ResponseEntity.ok(authResponse);
+    public ResponseEntity<String> register(@RequestBody UserDto request, HttpServletResponse servletResponse) {
+        String message = authenticationService.register(request, servletResponse);
+        return ResponseEntity.ok(message);
     }
 
     @PostMapping("/login")

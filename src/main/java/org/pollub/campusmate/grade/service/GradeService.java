@@ -7,11 +7,11 @@ import org.pollub.campusmate.grade.entity.Grade;
 import org.pollub.campusmate.grade.exception.GradeNotFound;
 import org.pollub.campusmate.grade.repository.GradeRepository;
 import org.pollub.campusmate.user.entity.User;
+import org.pollub.campusmate.user.exception.UserNotFound;
 import org.pollub.campusmate.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -84,5 +84,17 @@ public class GradeService {
     }
 
 
+    public Collection<Grade> getGradesByUserId(Long userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new GradeNotFound("User with id " + userId + " not found");
+        }
+        return gradeRepository.findByUserUserId(userId);
+    }
 
+    public Collection<Grade> getGradesByCreatorId(Long creatorId) {
+        if (!userRepository.existsById(creatorId)) {
+            throw new UserNotFound("User with id " + creatorId + " not found");
+        }
+        return gradeRepository.findAllByCreatorId(creatorId);
+    }
 }

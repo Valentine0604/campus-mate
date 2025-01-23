@@ -88,4 +88,20 @@ public class GradeController {
                 .collect(Collectors.toList());
         return new ResponseEntity<>(grades, HttpStatus.OK);
     }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<GradeDto>> getGradesByUserId(@PathVariable Long userId) {
+        var grades = gradeService.getGradesByUserId(userId).stream()
+                .map(gradeMapper::toDto)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(grades, HttpStatus.OK);
+    }
+
+    @GetMapping("/creator/{creatorId}")
+    public ResponseEntity<List<GradeDto>> getGradesByCreatorId(@PathVariable Long creatorId) {
+        var grades = gradeService.getGradesByCreatorId(creatorId).stream()
+                .map(gradeMapper::toDto)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(grades, HttpStatus.OK);
+    }
 }

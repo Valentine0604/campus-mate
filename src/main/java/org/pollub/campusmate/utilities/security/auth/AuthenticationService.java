@@ -16,6 +16,7 @@ import org.pollub.campusmate.user.exception.UserNotFound;
 import org.pollub.campusmate.user.repository.UserRepository;
 import org.pollub.campusmate.utilities.security.Role;
 import org.pollub.campusmate.utilities.security.config.JwtService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,8 +37,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final EmailSenderService emailSenderService;
 
-    public AuthenticationResponse register(UserDto request, HttpServletResponse response) {
-
+    public String register(UserDto request, HttpServletResponse response) {
         String rawPassword = generatePassword();
 
         if (rawPassword == null || rawPassword.isEmpty()) {
@@ -58,31 +58,27 @@ public class AuthenticationService {
                 .role(request.getRole())
                 .group(request.getGroup())
                 .isFirstPasswordChanged(false)
+                .group(request.getGroup())
                 .build();
 
-        if (createdUser.getRole().equals(Role.ROLE_LECTURER)) {
-            String contactName = createdUser.getFirstName() + " " + createdUser.getLastName();
-            AddressBookEntry entry = new AddressBookEntry(contactName, createdUser.getEmail(), createdUser);
+        var savedUser = userRepository.save(createdUser);
+
+        if (savedUser.getRole().equals(Role.ROLE_LECTURER)) {
+            String contactName = savedUser.getFirstName() + " " + savedUser.getLastName();
+            AddressBookEntry entry = new AddressBookEntry(contactName, savedUser.getEmail(), savedUser);
             addressBookEntryService.saveAddressBookEntry(entry);
         }
 
-
-        userRepository.save(createdUser);
-
-        var jwtToken = jwtService.generateToken(createdUser);
-        addJwtCookie(response, jwtToken);
-
         emailSenderService.sendEmail(
-                createdUser.getEmail(),
+                savedUser.getEmail(),
                 "Welcome to CampusMate",
-                "Hello " + createdUser.getFirstName() + " " + createdUser.getLastName() + ",\n"
-                        + "Your credentials are as follows: \nEmail: " + createdUser.getEmail()
+                "Hello " + savedUser.getFirstName() + " " + savedUser.getLastName() + ",\n"
+                        + "Your credentials are as follows: \nEmail: " + savedUser.getEmail()
                         + "\nPassword: " + rawPassword
                         + "\n\nPlease change your password after logging in."
                         + "\n\nBest regards,\nCampusMate Team");
 
-        return AuthenticationResponse.builder().token(jwtToken).build();
-
+        return "User registered successfully";
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request, HttpServletResponse response) {
@@ -158,7 +154,7 @@ public class AuthenticationService {
         userRepository.save(user);
 
         User userLecturer = new User();
-        userLecturer.setEmail("john@paul.com");
+        userLecturer.setEmail("lecturer@lecturer.com");
         userLecturer.setFirstName("lecturer");
         userLecturer.setLastName("lecturer");
         userLecturer.setPassword(passwordEncoder.encode("Lecturer1__"));
@@ -176,6 +172,7 @@ public class AuthenticationService {
         userStudent.setPassword(passwordEncoder.encode("User1___"));
         userStudent.setRole(Role.valueOf("ROLE_STUDENT"));
         userStudent.setFirstPasswordChanged(true);
+        userStudent.setGroup("IO 7.9");
         userRepository.save(userStudent);
     }
 }
