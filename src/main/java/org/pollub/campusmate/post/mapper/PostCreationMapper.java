@@ -7,7 +7,6 @@ import org.pollub.campusmate.team.entity.Team;
 import org.pollub.campusmate.team.service.TeamService;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 

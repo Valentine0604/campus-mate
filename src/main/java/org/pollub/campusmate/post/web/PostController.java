@@ -4,7 +4,6 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.pollub.campusmate.post.dto.PostCreationDto;
 import org.pollub.campusmate.post.dto.PostDto;
-import org.pollub.campusmate.post.entity.Post;
 import org.pollub.campusmate.post.mapper.PostCreationMapper;
 import org.pollub.campusmate.post.mapper.PostMapper;
 import org.pollub.campusmate.post.service.PostService;

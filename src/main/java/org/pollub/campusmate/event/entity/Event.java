@@ -3,14 +3,13 @@ package org.pollub.campusmate.event.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import org.pollub.campusmate.team.entity.Team;
-import org.pollub.campusmate.user.entity.User;
 import org.pollub.campusmate.utilities.validator.ValidDate;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @ValidDate
 @Entity

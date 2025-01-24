@@ -2,10 +2,10 @@ package org.pollub.campusmate.event.web;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.pollub.campusmate.event.dto.EventDto;
 import org.pollub.campusmate.event.dto.EventCreationDto;
-import org.pollub.campusmate.event.mapper.EventMapper;
+import org.pollub.campusmate.event.dto.EventDto;
 import org.pollub.campusmate.event.mapper.EventCreationMapper;
+import org.pollub.campusmate.event.mapper.EventMapper;
 import org.pollub.campusmate.event.service.EventService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

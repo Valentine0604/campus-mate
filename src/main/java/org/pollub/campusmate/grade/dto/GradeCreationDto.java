@@ -3,7 +3,6 @@ package org.pollub.campusmate.grade.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.pollub.campusmate.user.entity.User;
 import org.pollub.campusmate.utilities.validator.ValidGrade;
 
 

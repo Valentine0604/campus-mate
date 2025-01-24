@@ -10,16 +10,12 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
-import java.util.Collections;
-
-import static org.springframework.security.authorization.AuthenticatedAuthorizationManager.anonymous;
 
 @Configuration
 @RequiredArgsConstructor
@@ -58,7 +54,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/team/{teamId}").hasAnyRole("ADMIN", "LECTURER")
                         .requestMatchers(HttpMethod.PATCH, "/api/team/{teamId}").hasAnyRole("ADMIN", "LECTURER")
                         .requestMatchers(HttpMethod.GET, "/api/team/{teamId}/users").hasAnyRole("ADMIN", "LECTURER", "STUDENT")
-                        //.requestMatchers(HttpMethod.GET, "/api/team/{teamId}/grades").hasAnyRole("ADMIN", "LECTURER")
                         .requestMatchers(HttpMethod.GET, "/api/team/{teamId}/events").hasAnyRole("ADMIN", "LECTURER", "STUDENT")
                         .requestMatchers(HttpMethod.GET, "/api/team/{teamId}/posts").hasAnyRole("ADMIN", "LECTURER", "STUDENT")
                         .requestMatchers(HttpMethod.GET, "/api/post/{postId}").hasAnyRole("ADMIN", "LECTURER", "STUDENT")

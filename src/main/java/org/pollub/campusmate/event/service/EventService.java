@@ -8,8 +8,6 @@ import org.pollub.campusmate.event.entity.Event;
 import org.pollub.campusmate.event.exception.EventNotFound;
 import org.pollub.campusmate.event.mapper.EventCreationMapper;
 import org.pollub.campusmate.event.repository.EventRepository;
-import org.pollub.campusmate.team.entity.Team;
-import org.pollub.campusmate.user.entity.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

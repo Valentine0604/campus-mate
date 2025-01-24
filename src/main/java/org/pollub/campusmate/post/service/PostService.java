@@ -8,6 +8,7 @@ import org.pollub.campusmate.post.repository.PostRepository;
 import org.pollub.campusmate.team.entity.Team;
 import org.pollub.campusmate.team.repository.TeamRepository;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service

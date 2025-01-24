@@ -1,7 +1,6 @@
 package org.pollub.campusmate.team.service;
 
 import lombok.AllArgsConstructor;
-import org.pollub.campusmate.grade.entity.Grade;
 import org.pollub.campusmate.team.entity.Team;
 import org.pollub.campusmate.team.exception.TeamNotFound;
 import org.pollub.campusmate.team.repository.TeamRepository;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -59,7 +57,7 @@ public class TeamService {
     }
 
     public List<Team> getAllTeams(){
-        List<Team> foundTeams = (List<Team>) teamRepository.findAll();
+        List<Team> foundTeams = teamRepository.findAll();
 
         if (foundTeams.isEmpty()) {
             throw new TeamNotFound("Teams not found");

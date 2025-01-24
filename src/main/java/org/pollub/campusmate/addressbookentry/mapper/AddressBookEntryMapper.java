@@ -3,7 +3,6 @@ package org.pollub.campusmate.addressbookentry.mapper;
 import lombok.AllArgsConstructor;
 import org.pollub.campusmate.addressbookentry.dto.AddressBookEntryDto;
 import org.pollub.campusmate.addressbookentry.entity.AddressBookEntry;
-import org.pollub.campusmate.user.repository.UserRepository;
 import org.springframework.stereotype.Component;
 
 @Component

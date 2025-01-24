@@ -2,7 +2,6 @@ package org.pollub.campusmate.addressbookentry.service;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import org.pollub.campusmate.addressbookentry.dto.AddressBookEntryCreationDto;
 import org.pollub.campusmate.addressbookentry.dto.AddressBookEntryDto;
 import org.pollub.campusmate.addressbookentry.entity.AddressBookEntry;
 import org.pollub.campusmate.addressbookentry.exception.AddressBookEntryNotFound;

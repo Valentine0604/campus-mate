@@ -1,15 +1,12 @@
 package org.pollub.campusmate.schedule.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.Size;
-import lombok.*;
-import org.pollub.campusmate.user.entity.User;
-import org.pollub.campusmate.utilities.validator.ValidDate;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-//@ValidDate
+
 @Entity
 @Table(name = "schedule")
 @Data

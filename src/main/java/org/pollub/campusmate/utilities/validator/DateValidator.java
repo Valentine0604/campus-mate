@@ -10,5 +10,4 @@ public class DateValidator implements ConstraintValidator<ValidDate, Event> {
     public boolean isValid(Event event, ConstraintValidatorContext context) {
 
         return event.getStartDate().isBefore(event.getEndDate());
-    }
-}
+    }}

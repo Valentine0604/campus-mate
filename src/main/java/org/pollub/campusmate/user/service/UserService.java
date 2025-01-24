@@ -2,23 +2,21 @@ package org.pollub.campusmate.user.service;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.pollub.campusmate.event.entity.Event;
 import org.pollub.campusmate.post.dto.PostDto;
 import org.pollub.campusmate.post.entity.Post;
 import org.pollub.campusmate.post.mapper.PostMapper;
 import org.pollub.campusmate.team.dto.TeamDto;
-import org.pollub.campusmate.team.mapper.TeamMapper;
-import org.pollub.campusmate.utilities.security.Role;
-import org.pollub.campusmate.event.entity.Event;
 import org.pollub.campusmate.team.entity.Team;
-import org.pollub.campusmate.user.exception.EmailAlreadyExistsException;
-import org.pollub.campusmate.event.repository.EventRepository;
+import org.pollub.campusmate.team.exception.TeamNotFound;
+import org.pollub.campusmate.team.mapper.TeamMapper;
 import org.pollub.campusmate.user.dto.UserDto;
 import org.pollub.campusmate.user.entity.User;
+import org.pollub.campusmate.user.exception.EmailAlreadyExistsException;
 import org.pollub.campusmate.user.exception.UserNotFound;
 import org.pollub.campusmate.user.repository.UserRepository;
+import org.pollub.campusmate.utilities.security.Role;
 import org.springframework.stereotype.Service;
-import org.pollub.campusmate.team.exception.TeamNotFound;
-
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -92,7 +90,7 @@ public class UserService {
     }
 
     public List<User> getAllUsers(){
-        List<User> foundUsers = (List<User>) userRepository.findAll();
+        List<User> foundUsers = userRepository.findAll();
         if (foundUsers.isEmpty()) {
             throw new UserNotFound("Users not found");
         }

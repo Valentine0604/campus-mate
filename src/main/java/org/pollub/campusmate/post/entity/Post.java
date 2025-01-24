@@ -2,14 +2,14 @@ package org.pollub.campusmate.post.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import org.pollub.campusmate.team.entity.Team;
 import org.pollub.campusmate.user.entity.User;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity

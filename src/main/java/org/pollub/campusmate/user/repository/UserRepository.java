@@ -3,11 +3,11 @@ package org.pollub.campusmate.user.repository;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.NonNull;
-import org.pollub.campusmate.utilities.security.Role;
 import org.pollub.campusmate.user.entity.User;
+import org.pollub.campusmate.utilities.security.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -16,7 +16,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findByRole(Role role);
 
-    @Query("SELECT u FROM User u WHERE u.email = :email")
     Optional<User> findByEmail(String email);
     Optional<User> findByFirstNameAndLastName(String firstName, String lastName);
 

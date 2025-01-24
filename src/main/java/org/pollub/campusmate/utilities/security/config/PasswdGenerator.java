@@ -1,14 +1,15 @@
 package org.pollub.campusmate.utilities.security.config;
 
+import org.passay.CharacterData;
 import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
 import org.passay.PasswordGenerator;
-import org.passay.CharacterData;
 import org.pollub.campusmate.utilities.constants.GeneratePassword;
 import org.pollub.campusmate.utilities.constants.Pattern;
 
 import java.security.SecureRandom;
 
+@SuppressWarnings("deprecation")
 public class PasswdGenerator {
 
     public static String generatePassword() {

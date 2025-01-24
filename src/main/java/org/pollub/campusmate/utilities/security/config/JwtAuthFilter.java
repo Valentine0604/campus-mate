@@ -7,12 +7,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.pollub.campusmate.user.entity.User;
-import org.pollub.campusmate.user.repository.UserRepository;
-import org.pollub.campusmate.user.service.UserService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,9 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -33,8 +27,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
-    private final UserRepository userRepository;
-    private final UserService userService;
 
     @Override
     protected void doFilterInternal(
@@ -81,7 +73,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 }
             }
         } catch (Exception e) {
-            // Token is invalid or expired
             clearAuthenticationAndInvalidateCookie(response);
             return;
         }
@@ -90,16 +81,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
     private void clearAuthenticationAndInvalidateCookie(HttpServletResponse response) {
-        // Clear the security context
         SecurityContextHolder.clearContext();
 
-        // Invalidate the JWT cookie
         Cookie invalidCookie = new Cookie("jwt", null);
-        invalidCookie.setMaxAge(0);  // Expire immediately
-        invalidCookie.setPath("/");  // Ensure it matches the original cookie's path
+        invalidCookie.setMaxAge(0);
+        invalidCookie.setPath("/");
         response.addCookie(invalidCookie);
 
-        // Optionally, you can set a response status to indicate unauthorized access
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     }
 }

@@ -4,9 +4,6 @@ import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-
-import java.util.HashMap;
-
 import org.pollub.campusmate.addressbookentry.entity.AddressBookEntry;
 import org.pollub.campusmate.addressbookentry.service.AddressBookEntryService;
 import org.pollub.campusmate.user.dto.UserDto;
@@ -16,15 +13,15 @@ import org.pollub.campusmate.user.exception.UserNotFound;
 import org.pollub.campusmate.user.repository.UserRepository;
 import org.pollub.campusmate.utilities.security.Role;
 import org.pollub.campusmate.utilities.security.config.JwtService;
-import org.springframework.http.ResponseEntity;
+import org.pollub.campusmate.utilities.service.EmailSenderService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import static org.pollub.campusmate.utilities.security.config.PasswdGenerator.generatePassword;
+import java.util.HashMap;
 
-import org.pollub.campusmate.utilities.service.EmailSenderService;
+import static org.pollub.campusmate.utilities.security.config.PasswdGenerator.generatePassword;
 
 @Service
 @RequiredArgsConstructor
@@ -154,9 +151,9 @@ public class AuthenticationService {
         userRepository.save(user);
 
         User userLecturer = new User();
-        userLecturer.setEmail("lecturer@lecturer.com");
-        userLecturer.setFirstName("lecturer");
-        userLecturer.setLastName("lecturer");
+        userLecturer.setEmail("john@paul.com");
+        userLecturer.setFirstName("John");
+        userLecturer.setLastName("Paul");
         userLecturer.setPassword(passwordEncoder.encode("Lecturer1__"));
         userLecturer.setRole(Role.valueOf("ROLE_LECTURER"));
         userLecturer.setFirstPasswordChanged(true);

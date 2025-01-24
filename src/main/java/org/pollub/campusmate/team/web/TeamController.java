@@ -3,15 +3,13 @@ package org.pollub.campusmate.team.web;
 import lombok.AllArgsConstructor;
 import org.pollub.campusmate.event.dto.EventDto;
 import org.pollub.campusmate.event.mapper.EventMapper;
-import org.pollub.campusmate.post.dto.PostCreationDto;
 import org.pollub.campusmate.post.dto.PostDto;
-import org.pollub.campusmate.post.mapper.PostCreationMapper;
 import org.pollub.campusmate.post.mapper.PostMapper;
 import org.pollub.campusmate.team.dto.TeamDto;
 import org.pollub.campusmate.team.dto.UserIdsRequest;
+import org.pollub.campusmate.team.entity.Team;
 import org.pollub.campusmate.team.mapper.TeamMapper;
 import org.pollub.campusmate.team.service.TeamService;
-import org.pollub.campusmate.team.entity.Team;
 import org.pollub.campusmate.user.dto.UserDto;
 import org.pollub.campusmate.user.entity.User;
 import org.pollub.campusmate.user.mapper.UserMapper;
@@ -22,7 +20,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -46,25 +43,6 @@ public class TeamController {
         TeamDto teamToDisplay = teamMapper.toDto(team);
         return new ResponseEntity<>(teamToDisplay, HttpStatus.OK);
     }
-
-//    @PostMapping
-//    public ResponseEntity<String> createTeam(@RequestBody TeamDto teamDTO) {
-//        Team createdTeam = teamMapper.toEntity(teamDTO);
-//
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        if(authentication != null && authentication.isAuthenticated()) {
-//            var email = authentication.getName();
-//            var currentUser = userService.getUserByEmail(email);
-//
-//            createdTeam.setCreatorId(currentUser.getUserId());
-//        }
-//        else {
-//            return new ResponseEntity<>("User is not authenticated", HttpStatus.UNAUTHORIZED);
-//        }
-//
-//        teamService.addTeam(createdTeam);
-//        return new ResponseEntity<>("Team created successfully", HttpStatus.CREATED);
-//    }
 
     @PostMapping
     public ResponseEntity<String> createTeam(@RequestBody TeamDto teamDTO) {

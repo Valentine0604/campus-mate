@@ -11,7 +11,9 @@ import org.pollub.campusmate.user.exception.UserNotFound;
 import org.pollub.campusmate.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -74,7 +76,7 @@ public class GradeService {
     }
 
     public List<Grade> getAllGrades() {
-        List<Grade> foundGrades = (List<Grade>)gradeRepository.findAll();
+        List<Grade> foundGrades = gradeRepository.findAll();
 
         if(foundGrades.isEmpty()){
             throw new GradeNotFound("Grades not found");

@@ -2,18 +2,14 @@ package org.pollub.campusmate.user.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.pollub.campusmate.utilities.security.Role;
 import org.pollub.campusmate.addressbookentry.entity.AddressBookEntry;
-import org.pollub.campusmate.event.entity.Event;
 import org.pollub.campusmate.grade.entity.Grade;
 import org.pollub.campusmate.post.entity.Post;
-import org.pollub.campusmate.schedule.entity.Schedule;
 import org.pollub.campusmate.team.entity.Team;
-import org.pollub.campusmate.utilities.validator.ValidPassword;
+import org.pollub.campusmate.utilities.security.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -64,17 +60,6 @@ public class User implements UserDetails {
 
     @Column(name = "groups")
     private String group;
-
-//    @Column(name = "is_two_factor_enabled", nullable = false)
-//    private boolean isTwoFactorEnabled;
-//
-//    @Column(name = "two_factor_secret", nullable = false)
-//    private String twoFactorSecret;
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "backup_codes", joinColumns = @JoinColumn(name = "user_id"))
-    @Column(name = "backup_code")
-    private List<String> backupCodes;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Grade> grades;

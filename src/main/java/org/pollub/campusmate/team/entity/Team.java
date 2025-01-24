@@ -2,7 +2,9 @@ package org.pollub.campusmate.team.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import org.pollub.campusmate.event.entity.Event;
 import org.pollub.campusmate.post.entity.Post;
 import org.pollub.campusmate.user.entity.User;
@@ -47,6 +49,7 @@ public class Team {
     private List<Event> events;
 
     public void addPost(Post post) {
+
         posts.add(post);
     }
 

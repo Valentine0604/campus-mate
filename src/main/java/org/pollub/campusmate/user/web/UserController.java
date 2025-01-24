@@ -1,19 +1,16 @@
 package org.pollub.campusmate.user.web;
 
 import lombok.AllArgsConstructor;
-import org.pollub.campusmate.post.dto.PostDto;
-import org.pollub.campusmate.team.dto.TeamDto;
-import org.pollub.campusmate.utilities.security.Role;
 import org.pollub.campusmate.event.dto.EventDto;
 import org.pollub.campusmate.event.entity.Event;
-import org.pollub.campusmate.grade.entity.Grade;
-import org.pollub.campusmate.grade.dto.GradeDto;
-import org.pollub.campusmate.user.entity.User;
-import org.pollub.campusmate.user.service.UserService;
-import org.pollub.campusmate.user.dto.UserDto;
-import org.pollub.campusmate.user.mapper.UserMapper;
 import org.pollub.campusmate.event.mapper.EventMapper;
-import org.pollub.campusmate.grade.mapper.GradeMapper;
+import org.pollub.campusmate.post.dto.PostDto;
+import org.pollub.campusmate.team.dto.TeamDto;
+import org.pollub.campusmate.user.dto.UserDto;
+import org.pollub.campusmate.user.entity.User;
+import org.pollub.campusmate.user.mapper.UserMapper;
+import org.pollub.campusmate.user.service.UserService;
+import org.pollub.campusmate.utilities.security.Role;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +25,6 @@ public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
     private final EventMapper eventMapper;
-    private final GradeMapper gradeMapper;
 
     @GetMapping("/{userId}")
     public ResponseEntity<UserDto> getUser(@PathVariable Long userId) {

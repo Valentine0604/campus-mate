@@ -13,7 +13,4 @@ import java.util.List;
 @NoArgsConstructor
 public class AuthenticationResponse {
     private String token;
-    private boolean twoFactorRequired;
-    private String message; //Enter otp to complete login
-    private List<String> backupCodes;
 }
