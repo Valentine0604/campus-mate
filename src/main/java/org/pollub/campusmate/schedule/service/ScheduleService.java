@@ -1,5 +1,6 @@
 package org.pollub.campusmate.schedule.service;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
@@ -7,6 +8,7 @@ import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.component.VEvent;
 import org.pollub.campusmate.schedule.entity.Schedule;
 import org.pollub.campusmate.schedule.repository.ScheduleRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -54,5 +56,17 @@ public class ScheduleService {
     private LocalDateTime convertToLocalDateTime(Date date) {
         return date.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime();
 
+    }
+
+    @Transactional
+    public ResponseEntity<String> deleteScheduleByGroupName(String groupName) {
+        if (groupName == null) {
+            return ResponseEntity.badRequest().body("Group name is required");
+        }
+        if (!scheduleRepository.existsByGroup(groupName)) {
+            return ResponseEntity.notFound().build();
+        }
+        scheduleRepository.deleteScheduleByGroup(groupName);
+        return ResponseEntity.ok("Schedule deleted successfully");
     }
 }

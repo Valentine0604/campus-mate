@@ -102,16 +102,6 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFound("User with email " + email + " not found"));
     }
 
-    public User getUserByFirstNameAndLastName(String firstName, String lastName) {
-        return userRepository.findByFirstNameAndLastName(firstName, lastName)
-                .orElseThrow(() -> new UserNotFound("User with name " + firstName + " " + lastName + " not found"));
-    }
-
-    public User getLoggedInUser(String email){
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFound("User with email " + email + " not found"));
-    }
-
     public List<PostDto> getUserPosts(Long userId) {
         User user = getUser(userId);
         List<PostDto> posts = new ArrayList<>();

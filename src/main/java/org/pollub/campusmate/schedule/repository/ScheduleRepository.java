@@ -7,4 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
 
+    void deleteScheduleByGroup(String group);
+
+    boolean existsByGroup(String groupName);
 }

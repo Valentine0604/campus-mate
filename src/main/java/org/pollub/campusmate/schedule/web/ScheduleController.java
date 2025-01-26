@@ -1,5 +1,6 @@
 package org.pollub.campusmate.schedule.web;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.pollub.campusmate.schedule.entity.Schedule;
 import org.pollub.campusmate.schedule.service.ScheduleService;
@@ -33,5 +34,11 @@ public class ScheduleController {
         Iterable<Schedule> schedules = scheduleService.getSchedule();
 
         return ResponseEntity.ok(schedules);
+    }
+
+
+    @DeleteMapping("/{groupName}")
+    public ResponseEntity<String> deleteScheduleByGroupName(@PathVariable String groupName) {
+        return scheduleService.deleteScheduleByGroupName(groupName);
     }
 }
