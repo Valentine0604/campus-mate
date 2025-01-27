@@ -54,10 +54,13 @@ public class PostService {
         if(!postRepository.existsById(postId)){
             throw new PostNotFound("Cannot execute delete operation. Post with id " + postId + " not found");
         }
-        for (Team team : postRepository.findById(postId).get().getTeams()) {
-            team.getPosts().remove(postRepository.findById(postId).get());
-            teamRepository.save(team);
-        }
+
+        postRepository.findById(postId).ifPresent(post -> {
+            for (Team team : post.getTeams()) {
+                team.getPosts().remove(post);
+                teamRepository.save(team);
+            }
+        });
 
         postRepository.deleteById(postId);
     }

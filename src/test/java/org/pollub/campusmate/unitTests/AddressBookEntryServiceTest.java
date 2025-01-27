@@ -13,6 +13,7 @@ import org.pollub.campusmate.addressbookentry.repository.AddressBookEntryReposit
 import org.pollub.campusmate.addressbookentry.service.AddressBookEntryService;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
@@ -73,7 +74,7 @@ class AddressBookEntryServiceTest {
     @Test
     void searchAddressBookEntriesByContactName_ShouldReturnMatchingEntries() {
         when(addressBookEntryRepository.findByContactNameContainingIgnoreCase("John"))
-                .thenReturn(Optional.of(Arrays.asList(testEntry)));
+                .thenReturn(Optional.of(Collections.singletonList(testEntry)));
 
         List<AddressBookEntry> results = addressBookEntryService
                 .searchAddressBookEntriesByContactName("John");
@@ -106,7 +107,7 @@ class AddressBookEntryServiceTest {
     @Test
     void getAllAddressBookEntries_ShouldReturnAllEntries() {
         when(addressBookEntryRepository.findAll())
-                .thenReturn(Arrays.asList(testEntry));
+                .thenReturn(Collections.singletonList(testEntry));
 
         List<AddressBookEntry> results = addressBookEntryService.getAllAddressBookEntries();
 

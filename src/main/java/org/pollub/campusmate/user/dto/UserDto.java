@@ -19,16 +19,12 @@ public class UserDto {
     private final Long userId;
 
     @Email
-    @NonNull
     private final String email;
 
-    @NonNull
     private final String firstName;
 
-    @NonNull
     private final String lastName;
 
-    @NonNull
     @Enumerated(EnumType.STRING)
     private final Role role;
 

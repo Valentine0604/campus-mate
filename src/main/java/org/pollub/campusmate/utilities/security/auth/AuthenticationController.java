@@ -48,7 +48,7 @@ public class AuthenticationController {
         if (bindingResult.hasErrors()) {
             StringBuilder errorMessage = new StringBuilder();
             bindingResult.getAllErrors().forEach(error -> errorMessage.append(error.getDefaultMessage()).append("\n"));
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(errorMessage.toString());
         }
 
         User selectedUser = userRepository.findById(userId).orElseThrow(() -> new UserNotFound("User with id " + userId + " not found"));

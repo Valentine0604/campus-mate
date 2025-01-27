@@ -54,7 +54,7 @@ public class GradeService {
                 .orElseThrow(() -> new GradeNotFound("Cannot execute delete operation. Grade with id " + gradeId + " not found"));
         try {
             User user = grade.getUser();
-            if (user.getGrades().contains(grade)) user.getGrades().remove(grade);
+            user.getGrades().remove(grade);
 
             userRepository.save(user);
             gradeRepository.delete(grade);
