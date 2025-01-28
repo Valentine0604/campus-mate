@@ -90,7 +90,7 @@ class GradeServiceTest {
     @Test
     void getGradesByStudentId_ShouldReturnGrades() {
         when(gradeRepository.findByUserUserId(1L))
-                .thenReturn(Arrays.asList(testGrade));
+                .thenReturn(Collections.singletonList(testGrade));
 
         List<Grade> results = gradeService.getGradesByStudentId(1L);
 
@@ -132,7 +132,7 @@ class GradeServiceTest {
     void getGradesByCreatorId_ShouldReturnGrades() {
         when(userRepository.existsById(2L)).thenReturn(true);
         when(gradeRepository.findAllByCreatorId(2L))
-                .thenReturn(Arrays.asList(testGrade));
+                .thenReturn(Collections.singletonList(testGrade));
 
         Collection<Grade> results = gradeService.getGradesByCreatorId(2L);
 
@@ -142,7 +142,7 @@ class GradeServiceTest {
 
     @Test
     void getAllGrades_ShouldReturnAllGrades() {
-        when(gradeRepository.findAll()).thenReturn(Arrays.asList(testGrade));
+        when(gradeRepository.findAll()).thenReturn(Collections.singletonList(testGrade));
 
         List<Grade> results = gradeService.getAllGrades();
 

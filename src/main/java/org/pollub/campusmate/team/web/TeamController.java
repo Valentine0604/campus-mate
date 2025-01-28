@@ -58,6 +58,7 @@ public class TeamController {
             }
 
             teamService.addTeam(createdTeam);
+            assert currentUser != null;
             teamService.addTeamUser(createdTeam.getTeamId(), currentUser.getUserId());
         }
         else {

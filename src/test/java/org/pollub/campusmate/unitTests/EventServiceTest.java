@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
@@ -108,7 +109,7 @@ class EventServiceTest {
 
     @Test
     void getAllEvents_ShouldReturnAllEvents() {
-        when(eventRepository.findAll()).thenReturn(Arrays.asList(testEvent));
+        when(eventRepository.findAll()).thenReturn(Collections.singletonList(testEvent));
 
         List<Event> results = eventService.getAllEvents();
 

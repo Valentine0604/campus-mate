@@ -38,7 +38,7 @@ public class PasswdGenerator {
 
         PasswordGenerator passwordGenerator = new PasswordGenerator();
 
-        String password = "";
+        String password;
         do {
             password = passwordGenerator.generatePassword(passwordLength,
                     lowerCaseRule, upperCaseRule, digitRule, specialCharRule);
