@@ -89,9 +89,7 @@ public class AuthenticationService {
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UserNotFound("User with email " + request.getEmail() + " not found"));
 
-        if (!user.isFirstPasswordChanged()) {
-            throw new IllegalArgumentException("Generated password must be changed");
-        }
+
         var extraClaims = new HashMap<String, Object>();
         extraClaims.put("role", user.getRole());
         extraClaims.put("userId", user.getUserId());
@@ -141,35 +139,39 @@ public class AuthenticationService {
 
     @PostConstruct
     public void initializeUsers() {
-        User user = new User();
-        user.setEmail("admin@admin.pl");
-        user.setFirstName("admin");
-        user.setLastName("admin");
-        user.setPassword(passwordEncoder.encode("Admin1__"));
-        user.setRole(Role.valueOf("ROLE_ADMIN"));
-        user.setFirstPasswordChanged(true);
-        userRepository.save(user);
+        if (!userRepository.existsByEmail("admin@admin.pl")) {
+            User user = new User();
+            user.setEmail("admin@admin.pl");
+            user.setFirstName("admin");
+            user.setLastName("admin");
+            user.setPassword(passwordEncoder.encode("Admin1__"));
+            user.setRole(Role.valueOf("ROLE_ADMIN"));
+            user.setFirstPasswordChanged(true);
+            userRepository.save(user);
+        }
 
-        User userLecturer = new User();
-        userLecturer.setEmail("john@paul.com");
-        userLecturer.setFirstName("John");
-        userLecturer.setLastName("Paul");
-        userLecturer.setPassword(passwordEncoder.encode("Lecturer1__"));
-        userLecturer.setRole(Role.valueOf("ROLE_LECTURER"));
-        userLecturer.setFirstPasswordChanged(true);
-        userRepository.save(userLecturer);
-        String contactName = userLecturer.getFirstName() + " " + userLecturer.getLastName();
-        AddressBookEntry entry = new AddressBookEntry(contactName, userLecturer.getEmail(), userLecturer);
-        addressBookEntryService.saveAddressBookEntry(entry);
+        if (!userRepository.existsByEmail("lecturer@lecturer.pl")) {
+            User user = new User();
+            user.setEmail("lecturer@lecturer.pl");
+            user.setFirstName("lecturer");
+            user.setLastName("lecturer");
+            user.setPassword(passwordEncoder.encode("Lecturer1__"));
+            user.setRole(Role.valueOf("ROLE_LECTURER"));
+            user.setFirstPasswordChanged(true);
+            userRepository.save(user);
+        }
 
-        User userStudent = new User();
-        userStudent.setEmail("user@user.pl");
-        userStudent.setFirstName("user");
-        userStudent.setLastName("user");
-        userStudent.setPassword(passwordEncoder.encode("User1___"));
-        userStudent.setRole(Role.valueOf("ROLE_STUDENT"));
-        userStudent.setFirstPasswordChanged(true);
-        userStudent.setGroup("IO 7.9");
-        userRepository.save(userStudent);
+        if (!userRepository.existsByEmail("student@student.pl")) {
+            User user = new User();
+            user.setEmail("student@student.pl");
+            user.setFirstName("student");
+            user.setLastName("student");
+            user.setPassword(passwordEncoder.encode("Student1__"));
+            user.setRole(Role.valueOf("ROLE_STUDENT"));
+            user.setFirstPasswordChanged(true);
+            user.setGroup("IO 7.9");
+            userRepository.save(user);
+        }
+
     }
 }

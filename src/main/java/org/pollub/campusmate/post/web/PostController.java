@@ -61,7 +61,6 @@ public class PostController {
             return new ResponseEntity<>("User is not authenticated", HttpStatus.UNAUTHORIZED);
         }
 
-        // Dodanie posta do bazy
         postService.addPost(post);
         return new ResponseEntity<>("Post created successfully", HttpStatus.CREATED);
     }
