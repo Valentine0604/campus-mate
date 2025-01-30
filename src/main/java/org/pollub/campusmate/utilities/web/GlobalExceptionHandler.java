@@ -1,12 +1,9 @@
 package org.pollub.campusmate.utilities.web;
 
-import org.pollub.campusmate.addressbook.exception.AddressBookNotFound;
 import org.pollub.campusmate.addressbookentry.exception.AddressBookEntryNotFound;
-import org.pollub.campusmate.calendar.exception.CalendarNotFound;
 import org.pollub.campusmate.event.exception.EventNotFound;
 import org.pollub.campusmate.grade.exception.GradeNotFound;
 import org.pollub.campusmate.post.exception.PostNotFound;
-import org.pollub.campusmate.schedule.exception.ScheduleNotFound;
 import org.pollub.campusmate.team.exception.TeamNotFound;
 import org.pollub.campusmate.user.exception.EmailAlreadyExistsException;
 import org.pollub.campusmate.user.exception.PasswordDoesNotMatch;
@@ -34,11 +31,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(ScheduleNotFound.class)
-    public ResponseEntity<String> handleScheduleNotFound(ScheduleNotFound ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
-    }
-
     @ExceptionHandler(GradeNotFound.class)
     public ResponseEntity<String> handleGradeNotFound(GradeNotFound ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
@@ -46,16 +38,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(EventNotFound.class)
     public ResponseEntity<String> handleEventNotFound(EventNotFound ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(CalendarNotFound.class)
-    public ResponseEntity<String> handleCalendarNotFound(CalendarNotFound ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(AddressBookNotFound.class)
-    public ResponseEntity<String> handleAddressBookNotFound(AddressBookNotFound ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 

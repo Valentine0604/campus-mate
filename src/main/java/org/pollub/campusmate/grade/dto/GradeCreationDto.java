@@ -3,7 +3,6 @@ package org.pollub.campusmate.grade.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.pollub.campusmate.user.entity.User;
 import org.pollub.campusmate.utilities.validator.ValidGrade;
 
 
@@ -16,5 +15,6 @@ public class GradeCreationDto {
     @ValidGrade
     private final String grade;
     private final String comment;
-    private final User user;
+    private final Long userId;
+    private final Long creatorId;
 }

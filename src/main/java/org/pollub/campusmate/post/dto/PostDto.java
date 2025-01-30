@@ -1,18 +1,17 @@
 package org.pollub.campusmate.post.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
 public class PostDto {
 
+    private Long postId;
     private String postTitle;
     private String postContent;
     private String author;

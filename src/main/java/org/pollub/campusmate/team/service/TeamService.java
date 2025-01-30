@@ -1,13 +1,16 @@
 package org.pollub.campusmate.team.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.pollub.campusmate.team.entity.Team;
 import org.pollub.campusmate.team.exception.TeamNotFound;
 import org.pollub.campusmate.team.repository.TeamRepository;
 import org.pollub.campusmate.user.entity.User;
+import org.pollub.campusmate.user.exception.UserNotFound;
 import org.pollub.campusmate.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -33,7 +36,13 @@ public class TeamService {
         if(!teamRepository.existsById(teamId)){
             throw new TeamNotFound("Cannot execute delete operation. Team with id " + teamId + " not found");
         }
-
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new TeamNotFound("Team not found with id: " + teamId));
+        team.getUsers().clear();
+        team.getPosts().clear();
+        team.getEvents().clear();
+        team.setCreatorId(null);
+        teamRepository.save(team);
         teamRepository.deleteById(teamId);
     }
 
@@ -41,7 +50,8 @@ public class TeamService {
         if(!teamRepository.existsById(teamId)){
             throw new TeamNotFound("Cannot execute update operation. Team with id " + teamId + " not found");
         }
-        Team foundTeam = teamRepository.findById(teamId).get();
+        Team foundTeam = teamRepository.findById(teamId)
+                .orElseThrow(() -> new TeamNotFound("Team not found with id: " + teamId));
         team.setTeamId(foundTeam.getTeamId());
         team.setEvents(foundTeam.getEvents());
         team.setPosts(foundTeam.getPosts());
@@ -50,7 +60,8 @@ public class TeamService {
     }
 
     public List<Team> getAllTeams(){
-        List<Team> foundTeams = (List<Team>) teamRepository.findAll();
+        List<Team> foundTeams = teamRepository.findAll();
+
         if (foundTeams.isEmpty()) {
             throw new TeamNotFound("Teams not found");
         }
@@ -63,9 +74,30 @@ public class TeamService {
         if(!teamRepository.existsById(teamId)){
             throw new TeamNotFound("Team with id " + teamId + " not found");
         }
-        Team foundTeam = teamRepository.findById(teamId).get();
-        User foundUser = userRepository.findById(userId).get();
+        Team foundTeam = teamRepository.findById(teamId)
+                .orElseThrow(() -> new TeamNotFound("Team with id " + teamId + " not found"));
+
+        User foundUser = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFound("User with id " + userId + " not found"));
+
         foundTeam.getUsers().add(foundUser);
         teamRepository.save(foundTeam);
+
+    }
+
+    public void removeUserFromTeam(Long teamId, Long userId) {
+
+        if(!teamRepository.existsById(teamId)){
+            throw new TeamNotFound("Team with id " + teamId + " not found");
+        }
+        Team foundTeam = teamRepository.findById(teamId).orElseThrow(() -> new TeamNotFound("Team with id " + userId + " not found"));
+        User foundUser = userRepository.findById(userId).orElseThrow(() -> new UserNotFound("User with id " + userId + " not found"));
+
+        foundTeam.getUsers().remove(foundUser);
+        teamRepository.save(foundTeam);
+    }
+
+    public Collection<Team> getTeamsByCreatorId(Long creatorId) {
+        return teamRepository.findAllByCreatorId(creatorId);
     }
 }

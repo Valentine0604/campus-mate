@@ -1,12 +1,18 @@
 package org.pollub.campusmate.grade.service;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.pollub.campusmate.grade.dto.GradeDto;
 import org.pollub.campusmate.grade.entity.Grade;
 import org.pollub.campusmate.grade.exception.GradeNotFound;
 import org.pollub.campusmate.grade.repository.GradeRepository;
+import org.pollub.campusmate.user.entity.User;
+import org.pollub.campusmate.user.exception.UserNotFound;
+import org.pollub.campusmate.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -14,6 +20,7 @@ import java.util.List;
 public class GradeService {
 
     private final GradeRepository gradeRepository;
+    private final UserRepository userRepository;
 
     public Grade getGrade(long gradeId) {
 
@@ -41,25 +48,36 @@ public class GradeService {
         return gradeRepository.save(grade);
     }
 
-    public void deleteGrade(long gradeId) {
-        if(!gradeRepository.existsById(gradeId)) {
-            throw new GradeNotFound("Cannot execute delete operation. Grade with id " + gradeId + " not found");
+    @Transactional
+    public void deleteGrade(Long gradeId) {
+        Grade grade = gradeRepository.findById(gradeId)
+                .orElseThrow(() -> new GradeNotFound("Cannot execute delete operation. Grade with id " + gradeId + " not found"));
+        try {
+            User user = grade.getUser();
+            user.getGrades().remove(grade);
+
+            userRepository.save(user);
+            gradeRepository.delete(grade);
+            gradeRepository.flush();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to delete grade with id " + gradeId, e);
         }
-        gradeRepository.deleteById(gradeId);
     }
 
-    public void updateGrade(Long gradeId, Grade grade) {
+    public void updateGrade(Long gradeId, GradeDto grade) {
         if(!gradeRepository.existsById(grade.getGradeId())) {
             throw new GradeNotFound("Cannot execute update operation. Grade with id " + grade.getGradeId() + " not found");
         }
-        Grade foundGrade = getGrade(grade.getGradeId());
-        foundGrade.setGradeId(grade.getGradeId());
-        foundGrade.setUser(grade.getUser());
-        gradeRepository.save(grade);
+        Grade foundGrade = getGrade(gradeId);
+        if (grade.getSubjectName() != null) foundGrade.setSubjectName(grade.getSubjectName());
+        if (grade.getGrade() != null) foundGrade.setGrade(grade.getGrade());
+        if (grade.getComment() != null) foundGrade.setComment(grade.getComment());
+        if (grade.getDateOfReceipt() != null) foundGrade.setDateOfReceipt(grade.getDateOfReceipt());
+        gradeRepository.save(foundGrade);
     }
 
     public List<Grade> getAllGrades() {
-        List<Grade> foundGrades = (List<Grade>)gradeRepository.findAll();
+        List<Grade> foundGrades = gradeRepository.findAll();
 
         if(foundGrades.isEmpty()){
             throw new GradeNotFound("Grades not found");
@@ -69,5 +87,17 @@ public class GradeService {
     }
 
 
+    public Collection<Grade> getGradesByUserId(Long userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new GradeNotFound("User with id " + userId + " not found");
+        }
+        return gradeRepository.findByUserUserId(userId);
+    }
 
+    public Collection<Grade> getGradesByCreatorId(Long creatorId) {
+        if (!userRepository.existsById(creatorId)) {
+            throw new UserNotFound("User with id " + creatorId + " not found");
+        }
+        return gradeRepository.findAllByCreatorId(creatorId);
+    }
 }

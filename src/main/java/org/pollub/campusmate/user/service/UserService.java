@@ -1,21 +1,22 @@
 package org.pollub.campusmate.user.service;
 
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.pollub.campusmate.utilities.Role;
-import org.pollub.campusmate.user.dto.ChangePasswordDto;
 import org.pollub.campusmate.event.entity.Event;
+import org.pollub.campusmate.post.dto.PostDto;
+import org.pollub.campusmate.post.entity.Post;
+import org.pollub.campusmate.post.mapper.PostMapper;
+import org.pollub.campusmate.team.dto.TeamDto;
 import org.pollub.campusmate.team.entity.Team;
-import org.pollub.campusmate.user.exception.EmailAlreadyExistsException;
-import org.pollub.campusmate.user.exception.PasswordDoesNotMatch;
-import org.pollub.campusmate.event.repository.EventRepository;
+import org.pollub.campusmate.team.exception.TeamNotFound;
+import org.pollub.campusmate.team.mapper.TeamMapper;
 import org.pollub.campusmate.user.dto.UserDto;
 import org.pollub.campusmate.user.entity.User;
+import org.pollub.campusmate.user.exception.EmailAlreadyExistsException;
 import org.pollub.campusmate.user.exception.UserNotFound;
 import org.pollub.campusmate.user.repository.UserRepository;
+import org.pollub.campusmate.utilities.security.Role;
 import org.springframework.stereotype.Service;
-
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -27,7 +28,8 @@ import java.util.Set;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final EventRepository eventRepository;
+    private final PostMapper postMapper;
+    private final TeamMapper teamMapper;
 
 
     public User getUser(Long userId) {
@@ -41,14 +43,6 @@ public class UserService {
             throw new UserNotFound("Users not found");
         }
         return foundUsers;
-    }
-
-
-    public void addUser(@Valid User user) throws EmailAlreadyExistsException {
-        if(userRepository.existsByEmail(user.getEmail())) {
-            throw new EmailAlreadyExistsException("User with email " + user.getEmail() + " already exists");
-        }
-        userRepository.save(user);
     }
 
     public void deleteUser(Long userId){
@@ -82,29 +76,6 @@ public class UserService {
         userRepository.save(foundUser);
     }
 
-    @Transactional
-    public void changePassword(Long userId, ChangePasswordDto passwordDTO) {
-        if(!userRepository.existsById(userId)){
-            throw new UserNotFound("Cannot execute update operation. User with id " + userId + " not found");
-        }
-        if(passwordDTO.getOldPassword() == null || passwordDTO.getNewPassword() == null || passwordDTO.getConfirmPassword() == null) {
-            throw new PasswordDoesNotMatch("Password cannot be empty");
-        }
-        if(!passwordDTO.getOldPassword().equals(getUser(userId).getPassword())) {
-            throw new PasswordDoesNotMatch("Old password is incorrect");
-        }
-        if(passwordDTO.getNewPassword().equals(passwordDTO.getOldPassword())) {
-            throw new PasswordDoesNotMatch("New password cannot be the same as old password");
-        }
-        if(!passwordDTO.getNewPassword().equals(passwordDTO.getConfirmPassword())) {
-            throw new PasswordDoesNotMatch("New and confirm passwords don't match");
-        }
-        String password = passwordDTO.getNewPassword();
-        User user = getUser(userId);
-        user.setPassword(password);
-        userRepository.save(user);
-    }
-
     public List<Event> findEventsForUser(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFound("User not found"));
@@ -115,13 +86,11 @@ public class UserService {
             userEvents.addAll(team.getEvents());
         }
 
-        userEvents.addAll(eventRepository.findByUser(user));
-
         return new ArrayList<>(userEvents);
     }
 
     public List<User> getAllUsers(){
-        List<User> foundUsers = (List<User>) userRepository.findAll();
+        List<User> foundUsers = userRepository.findAll();
         if (foundUsers.isEmpty()) {
             throw new UserNotFound("Users not found");
         }
@@ -133,14 +102,26 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFound("User with email " + email + " not found"));
     }
 
-    public User getUserByFirstNameAndLastName(String firstName, String lastName) {
-        return userRepository.findByFirstNameAndLastName(firstName, lastName)
-                .orElseThrow(() -> new UserNotFound("User with name " + firstName + " " + lastName + " not found"));
+    public List<PostDto> getUserPosts(Long userId) {
+        User user = getUser(userId);
+        List<PostDto> posts = new ArrayList<>();
+        for (Team team : user.getTeams()) {
+            for (Post post : team.getPosts()) {
+                posts.add(postMapper.toDto(post));
+            }
+        }
+        return posts;
     }
 
-    //TODO: add get password after security
-    public List<String> getCurrentPassword() {
-        return null;
+    public List<TeamDto> getUserTeams(Long userId) {
+        User user = getUser(userId);
+        List<TeamDto> teams = new ArrayList<>();
+        if (user.getTeams().isEmpty()) {
+            throw new TeamNotFound("Teams not found");
+        }
+        for (Team team : user.getTeams()) {
+            teams.add(teamMapper.toDto(team));
+        }
+        return teams;
     }
-
 }

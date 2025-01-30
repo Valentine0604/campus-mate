@@ -2,11 +2,13 @@ package org.pollub.campusmate.addressbookentry.service;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import org.pollub.campusmate.addressbookentry.dto.AddressBookEntryDto;
 import org.pollub.campusmate.addressbookentry.entity.AddressBookEntry;
 import org.pollub.campusmate.addressbookentry.exception.AddressBookEntryNotFound;
 import org.pollub.campusmate.addressbookentry.repository.AddressBookEntryRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -21,9 +23,9 @@ public class AddressBookEntryService {
                 .orElseThrow(() -> new AddressBookEntryNotFound("Entry with id " + addressBookEntryId + " not found"));
     }
 
-    public AddressBookEntry getAddressBookEntryByContactName(String contactName) {
-        return addressBookEntryRepository.findByContactName(contactName)
-                .orElseThrow(() -> new AddressBookEntryNotFound("Entry with name " + contactName + " not found"));
+    public List<AddressBookEntry> searchAddressBookEntriesByContactName(String contactName) {
+        return addressBookEntryRepository.findByContactNameContainingIgnoreCase(contactName)
+                .orElse(Collections.emptyList());
     }
 
     public void saveAddressBookEntry(AddressBookEntry addressBookEntry) {
@@ -36,14 +38,17 @@ public class AddressBookEntryService {
         }
         addressBookEntryRepository.deleteById(addressBookEntryId);
     }
-    public void updateAddressBookEntry(long addressBookEntryId, AddressBookEntry addressBookEntry) {
+    public void updateAddressBookEntry(long addressBookEntryId, AddressBookEntryDto addressBookEntry) {
         if (!addressBookEntryRepository.existsById(addressBookEntryId)) {
             throw new AddressBookEntryNotFound("Cannot execute update operation. Entry with id " + addressBookEntryId + " not found");
         }
         AddressBookEntry foundAddressBookEntry = getAddressBookEntryById(addressBookEntryId);
-        addressBookEntry.setEntryId(addressBookEntryId);
-        addressBookEntry.setAddressBook(foundAddressBookEntry.getAddressBook());
-        addressBookEntryRepository.save(addressBookEntry);
+        foundAddressBookEntry.setContactName(addressBookEntry.getContactName());
+        foundAddressBookEntry.setPhoneNumber(addressBookEntry.getPhoneNumber());
+        foundAddressBookEntry.setEmail(addressBookEntry.getEmail());
+        foundAddressBookEntry.setClassNumber(addressBookEntry.getClassNumber());
+        foundAddressBookEntry.setNotes(addressBookEntry.getNotes());
+        addressBookEntryRepository.save(foundAddressBookEntry);
     }
 
     public List<AddressBookEntry> getAllAddressBookEntries() {

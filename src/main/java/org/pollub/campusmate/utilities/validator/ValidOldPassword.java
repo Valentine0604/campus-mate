@@ -9,10 +9,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Constraint(validatedBy = OldPasswordValidator.class)
-@Target(ElementType.PARAMETER)
+@Target({ElementType.FIELD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidOldPassword {
-    String message() default "New password cannot be the same as the previous one";
+    String message() default "New password cannot be the same as the new one";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

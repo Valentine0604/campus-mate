@@ -2,7 +2,9 @@ package org.pollub.campusmate.grade.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import org.pollub.campusmate.user.entity.User;
 import org.pollub.campusmate.utilities.validator.ValidGrade;
 
@@ -40,7 +42,11 @@ public class Grade {
     private LocalDate dateOfReceipt;
 
     @NonNull
-    @ManyToOne
+    @Column(name = "creator_id")
+    private Long creatorId;
+
+    @NonNull
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
 
