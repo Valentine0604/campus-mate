@@ -79,7 +79,7 @@ public class TeamController {
                 return new ResponseEntity<>("One of the users has already been added to team", HttpStatus.BAD_REQUEST);
             }
         }
-        return new ResponseEntity<>("User added to team successfully", HttpStatus.CREATED);
+        return new ResponseEntity<>("User has been added to team successfully", HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{teamId}")

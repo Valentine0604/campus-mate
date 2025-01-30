@@ -141,35 +141,42 @@ public class AuthenticationService {
 
     @PostConstruct
     public void initializeUsers() {
-        User user = new User();
-        user.setEmail("admin@admin.pl");
-        user.setFirstName("admin");
-        user.setLastName("admin");
-        user.setPassword(passwordEncoder.encode("Admin1__"));
-        user.setRole(Role.valueOf("ROLE_ADMIN"));
-        user.setFirstPasswordChanged(true);
-        userRepository.save(user);
 
-        User userLecturer = new User();
-        userLecturer.setEmail("john@paul.com");
-        userLecturer.setFirstName("John");
-        userLecturer.setLastName("Paul");
-        userLecturer.setPassword(passwordEncoder.encode("Lecturer1__"));
-        userLecturer.setRole(Role.valueOf("ROLE_LECTURER"));
-        userLecturer.setFirstPasswordChanged(true);
-        userRepository.save(userLecturer);
-        String contactName = userLecturer.getFirstName() + " " + userLecturer.getLastName();
-        AddressBookEntry entry = new AddressBookEntry(contactName, userLecturer.getEmail(), userLecturer);
-        addressBookEntryService.saveAddressBookEntry(entry);
+        if(!userRepository.existsByEmail("admin@admin.pl")) {
+            User user = new User();
+            user.setEmail("admin@admin.pl");
+            user.setFirstName("admin");
+            user.setLastName("admin");
+            user.setPassword(passwordEncoder.encode("Admin1__"));
+            user.setRole(Role.valueOf("ROLE_ADMIN"));
+            user.setFirstPasswordChanged(true);
+            userRepository.save(user);
+        }
 
-        User userStudent = new User();
-        userStudent.setEmail("user@user.pl");
-        userStudent.setFirstName("user");
-        userStudent.setLastName("user");
-        userStudent.setPassword(passwordEncoder.encode("User1___"));
-        userStudent.setRole(Role.valueOf("ROLE_STUDENT"));
-        userStudent.setFirstPasswordChanged(true);
-        userStudent.setGroup("IO 7.9");
-        userRepository.save(userStudent);
+        if(userRepository.existsByEmail("john@paul.com")) {
+            User userLecturer = new User();
+            userLecturer.setEmail("john@paul.com");
+            userLecturer.setFirstName("John");
+            userLecturer.setLastName("Paul");
+            userLecturer.setPassword(passwordEncoder.encode("Lecturer1__"));
+            userLecturer.setRole(Role.valueOf("ROLE_LECTURER"));
+            userLecturer.setFirstPasswordChanged(true);
+            userRepository.save(userLecturer);
+            String contactName = userLecturer.getFirstName() + " " + userLecturer.getLastName();
+            AddressBookEntry entry = new AddressBookEntry(contactName, userLecturer.getEmail(), userLecturer);
+            addressBookEntryService.saveAddressBookEntry(entry);
+        }
+
+        if(userRepository.existsByEmail("user@user.pl")) {
+            User userStudent = new User();
+            userStudent.setEmail("user@user.pl");
+            userStudent.setFirstName("user");
+            userStudent.setLastName("user");
+            userStudent.setPassword(passwordEncoder.encode("User1___"));
+            userStudent.setRole(Role.valueOf("ROLE_STUDENT"));
+            userStudent.setFirstPasswordChanged(true);
+            userStudent.setGroup("IO 7.9");
+            userRepository.save(userStudent);
+        }
     }
 }

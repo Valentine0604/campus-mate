@@ -32,9 +32,9 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> authenticate(@RequestBody AuthenticationRequest request, HttpServletResponse servletResponse) {
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request, HttpServletResponse servletResponse) {
         AuthenticationResponse authResponse = authenticationService.authenticate(request, servletResponse);
-        return new ResponseEntity<>("Logged in successfully", HttpStatus.OK);
+        return ResponseEntity.ok(authResponse);
     }
 
     @PostMapping("/logout")
