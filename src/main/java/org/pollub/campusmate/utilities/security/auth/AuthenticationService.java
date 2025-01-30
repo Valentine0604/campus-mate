@@ -14,6 +14,7 @@ import org.pollub.campusmate.user.repository.UserRepository;
 import org.pollub.campusmate.utilities.security.Role;
 import org.pollub.campusmate.utilities.security.config.JwtService;
 import org.pollub.campusmate.utilities.service.EmailSenderService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,6 +34,12 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final EmailSenderService emailSenderService;
+
+    @Value("${ADMIN_EMAIL}")
+    private String adminEmail;
+
+    @Value("${ADMIN_PASSWORD}")
+    private String adminPassword;
 
     public String register(UserDto request, HttpServletResponse response) {
         String rawPassword = generatePassword();
@@ -142,41 +149,15 @@ public class AuthenticationService {
     @PostConstruct
     public void initializeUsers() {
 
-        if(!userRepository.existsByEmail("admin@admin.pl")) {
+        if(!userRepository.existsByEmail(adminEmail)) {
             User user = new User();
-            user.setEmail("admin@admin.pl");
+            user.setEmail(adminEmail);
             user.setFirstName("admin");
             user.setLastName("admin");
-            user.setPassword(passwordEncoder.encode("Admin1__"));
+            user.setPassword(passwordEncoder.encode(adminPassword));
             user.setRole(Role.valueOf("ROLE_ADMIN"));
             user.setFirstPasswordChanged(true);
             userRepository.save(user);
-        }
-
-        if(userRepository.existsByEmail("john@paul.com")) {
-            User userLecturer = new User();
-            userLecturer.setEmail("john@paul.com");
-            userLecturer.setFirstName("John");
-            userLecturer.setLastName("Paul");
-            userLecturer.setPassword(passwordEncoder.encode("Lecturer1__"));
-            userLecturer.setRole(Role.valueOf("ROLE_LECTURER"));
-            userLecturer.setFirstPasswordChanged(true);
-            userRepository.save(userLecturer);
-            String contactName = userLecturer.getFirstName() + " " + userLecturer.getLastName();
-            AddressBookEntry entry = new AddressBookEntry(contactName, userLecturer.getEmail(), userLecturer);
-            addressBookEntryService.saveAddressBookEntry(entry);
-        }
-
-        if(userRepository.existsByEmail("user@user.pl")) {
-            User userStudent = new User();
-            userStudent.setEmail("user@user.pl");
-            userStudent.setFirstName("user");
-            userStudent.setLastName("user");
-            userStudent.setPassword(passwordEncoder.encode("User1___"));
-            userStudent.setRole(Role.valueOf("ROLE_STUDENT"));
-            userStudent.setFirstPasswordChanged(true);
-            userStudent.setGroup("IO 7.9");
-            userRepository.save(userStudent);
         }
     }
 }

@@ -162,4 +162,6 @@ buildNumber.properties
 # End of https://www.toptal.com/developers/gitignore/api/java,intellij,maven
 .idea/**
 .env
+*.env
+!.env.example
 application.properties
